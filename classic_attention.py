@@ -16,9 +16,10 @@ def main():
     hidden_dim = 15
     rbm = attention_rbm.AttentionRBM(rbm_sampler, visible_dim, hidden_dim)
 
-    rbm.train(dataset.test_data_bin, EPOCHS)
+    rbm.train(dataset.test_data_bin, EPOCHS, 0.1)
 
     rbm.test(dataset.test_data_bin, dataset.test_data_bin_answers)
 
 if __name__ == "__main__":
     main()
+    
