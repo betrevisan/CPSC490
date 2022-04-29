@@ -14,3 +14,6 @@ class SamplerRBM:
         activation = weighted_input + model.visible_bias.expand_as(weighted_input)
         prob_v_given_h = torch.sigmoid(activation)
         return prob_v_given_h, self.layer_given_prob(prob_v_given_h)
+    
+    def layer_given_prob(self, prob):
+        return torch.floor(prob + torch.rand(prob.size()))
