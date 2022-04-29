@@ -64,7 +64,7 @@ class AttentionData:
     
     # Generate a random position given the lower and the upper bounds on the x-axis
     def generate_random_loc(self, lower, upper):
-        return [np.random.randint(lower, upper+1), np.random.randint(0, self.height)]
+        return [np.random.randint(lower, upper+1), np.random.randint(0, self.height), -1]
     
     # Gets the ideal attention allocation for a given set of positions
     def best_attention(self, positions):                
@@ -108,8 +108,9 @@ class AttentionData:
         for i in range(len(target_data)):
             bin = []
             for j in range(4):
-                for k in range(len(target_data[i][j])):
-                    bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
+                for k in range(3):
+                    if target_data[i][j][k] >= 0:
+                        bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
             data_bin.append(np.concatenate(np.array(bin)))
         return np.array(data_bin)
     
