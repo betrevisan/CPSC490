@@ -37,7 +37,7 @@ class SamplerQRBM:
         solution_list.sort(key=lambda tup: int(tup[0]))
         visible_layer = [v for (k, v) in solution_list]
         
-        return visible_layer
+        return np.array(visible_layer)
     
     def sample_hidden(self, model, visible_layer):
         hamiltonian = 0
@@ -70,4 +70,4 @@ class SamplerQRBM:
         solution_list.sort(key=lambda tup: int(tup[0]))
         hidden_layer = [v for (k, v) in solution_list]
         
-        return hidden_layer
+        return np.array(hidden_layer)
