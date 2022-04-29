@@ -31,12 +31,10 @@ class SamplerQRBM:
         
         # CONFIRM CHAIN STRENGTH
         # CONFIRM NUM_READS
-        output = quantum_sampler.sample(bqm, 2, 1)
-        solution = output.first.sample
-        
-        # REVISIT THIS
+        sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
+        solution = sampler_output.first.sample
         solution_list = [(k, v) for k, v in solution.items()]
-        solution_list.sort(key=lambda tup: int(tup[0]))  # sorts in place
+        solution_list.sort(key=lambda tup: int(tup[0]))
         visible_layer = [v for (k, v) in solution_list]
         
         return visible_layer
@@ -66,12 +64,10 @@ class SamplerQRBM:
         
         # CONFIRM CHAIN STRENGTH
         # CONFIRM NUM_READS
-        output = quantum_sampler.sample(bqm, 2, 1)
-        solution = output.first.sample
-        
-        # REVISIT THIS
+        sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
+        solution = sampler_output.first.sample
         solution_list = [(k, v) for k, v in solution.items()]
-        solution_list.sort(key=lambda tup: int(tup[0]))  # sorts in place
+        solution_list.sort(key=lambda tup: int(tup[0]))
         hidden_layer = [v for (k, v) in solution_list]
         
         return hidden_layer
