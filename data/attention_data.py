@@ -17,7 +17,7 @@ class AttentionData:
         self.test_data = self.generate_test_data()
         self.train_data_bin = self.prepare_binary_data(self.train_data)
         self.test_data_bin = self.prepare_binary_data(self.test_data)
-        # self.train_data_bin_answers = self.prepare_train_answers()
+        self.train_data_bin_answers = self.prepare_train_answers()
         # self.test_data_bin_answers = self.prepare_test_answers()
 
     # Generate training data for the network
@@ -112,5 +112,11 @@ class AttentionData:
                     bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
             data_bin.append(np.concatenate(np.array(bin)))
         return np.array(data_bin)
+    
+    def prepare_train_answers(self):
+        answers = []
+        for i in range(len(self.train_data_bin)):
+            answers.append(self.train_data_bin[i][42:])
+        return np.array(answers)
 
     
