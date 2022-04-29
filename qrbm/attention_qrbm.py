@@ -20,13 +20,9 @@ class QRBM:
             
             curr_visible = self.sampler.sample_visible(self, init_hidden)
             curr_hidden = self.sampler.sample_hidden(self, curr_visible)
-            
-            # Should be of size (visible_dim, hidden_dim)
-            positive_gradient = np.outer(init_visible, init_hidden)
-            negative_gradient = np.outer(curr_visible, curr_hidden)
-            
+                        
             # Update weights
-            self.update_weights(positive_gradient, negative_gradient, learning_rate)
+            self.update_weights(init_visible, curr_visible, init_hidden, curr_hidden, learning_rate)
             
             # Update visible bias
             self.update_visible_bias(init_visible, curr_visible, learning_rate)
@@ -38,3 +34,17 @@ class QRBM:
             print("epoch: " + str(epoch) + " error: " + str(error))
             
             return
+    
+    def update_weights(self, init_visible, curr_visible, init_hidden, curr_hidden, learning_rate):
+        positive_gradient = np.outer(init_visible, init_hidden)
+        negative_gradient = np.outer(curr_visible, curr_hidden)
+        self.weights += learning_rate * (positive_gradient - negative_gradient)
+        return
+
+    def update_visible_bias(self, init_visible, curr_visible, learning_rate):
+        self.visible_bias += learning_rate * (init_visible - curr_visible)
+        return
+
+    def update_hidden_bias(self, init_hidden, curr_hidden, learning_rate):
+        self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
+        return
