@@ -31,7 +31,7 @@ class AttentionQRBM:
             # Update hidden bias
             self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
             
-            error = self.error(init_visible[0][-21:], curr_visible[0][-21:])
+            error = self.error(init_visible[-21:], curr_visible[-21:])
             print("epoch: " + str(epoch) + " error: " + str(error))
             
             return
