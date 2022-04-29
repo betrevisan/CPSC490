@@ -24,4 +24,4 @@ class SamplerRBM:
         return prob_v_given_h, visible_layer
     
     def layer_given_prob(self, prob):
-        return torch.floor(prob + torch.rand(prob.size()))
+        return np.floor(prob + np.random.rand(prob.shape[0]))
