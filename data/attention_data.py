@@ -15,8 +15,8 @@ class AttentionData:
         self.height = height
         self.train_data = self.generate_train_data()
         self.test_data = self.generate_test_data()
-        self.train_data_bin = self.prepare_binary_data(self.train_data)
-        self.test_data_bin = self.prepare_binary_data(self.test_data)
+        self.train_data_bin = self.prepare_data_binary(self.train_data)
+        self.test_data_bin = self.prepare_data_binary(self.test_data)
         self.train_data_bin_answers = self.prepare_train_answers()
         self.test_data_bin_answers = self.prepare_test_answers()
 
