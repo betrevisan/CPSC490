@@ -2,7 +2,7 @@ from pyqubo import Binary
 from dwave.system.composites import EmbeddingComposite
 from dwave.system.samplers import DWaveSampler
 
-class Sampler:
+class SamplerQRBM:
     def __init__(self):
         return
 
