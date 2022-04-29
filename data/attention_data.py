@@ -15,8 +15,8 @@ class AttentionData:
         self.height = height
         self.train_data = self.generate_train_data()
         self.test_data = self.generate_test_data()
-        # self.train_data_bin = self.prepare_data(self.train_data)
-        # self.test_data_bin = self.prepare_data(self.test_data)
+        self.train_data_bin = self.prepare_binary_data(self.train_data)
+        self.test_data_bin = self.prepare_binary_data(self.test_data)
         # self.train_data_bin_answers = self.prepare_train_answers()
         # self.test_data_bin_answers = self.prepare_test_answers()
 
@@ -102,5 +102,15 @@ class AttentionData:
         attentions[2] = int(attentions[2]/total_attn * 100)
      
         return attentions
+    
+    def prepare_data_binary(self, target_data):
+        data_bin = []
+        for i in range(len(target_data)):
+            bin = []
+            for j in range(4):
+                for k in range(len(target_data[i][j])):
+                    bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
+            data_bin.append(np.concatenate(np.array(bin)))
+        return np.array(data_bin)
 
     
