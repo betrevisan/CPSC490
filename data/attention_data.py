@@ -57,5 +57,9 @@ class AttentionData:
             data.append(datapoint)
         
         return np.array(data)
+    
+    # Generate a random position given the lower and the upper bounds on the x-axis
+    def generate_random_loc(self, lower, upper):
+        return [np.random.randint(lower, upper+1), np.random.randint(0, self.height)]
 
     
