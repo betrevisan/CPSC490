@@ -9,7 +9,7 @@ class AttentionRBM:
         self.hidden_bias = torch.randn(1, hidden_dim)
         self.learning_rate = 0.1
     
-    def train(self, train_data, epochs, initial_visible, curr_visible, initial_prob_h, curr_prob_h):
+    def train(self, train_data, epochs):
         train_data = torch.FloatTensor(train_data)
 
         for epoch in range(0, epochs):
