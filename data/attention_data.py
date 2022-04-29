@@ -1,6 +1,10 @@
 # Data class for the boltzmann for attention allocation
 import numpy as np
+import math
 
+# Helper functions
+def dist(p1, p2):
+    return math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
 class AttentionData:
     np.random.seed(11)
 
@@ -61,5 +65,42 @@ class AttentionData:
     # Generate a random position given the lower and the upper bounds on the x-axis
     def generate_random_loc(self, lower, upper):
         return [np.random.randint(lower, upper+1), np.random.randint(0, self.height)]
+    
+    # Gets the ideal attention allocation for a given set of positions
+    def best_attention(self, positions):                
+        dist2prey = dist(positions[0], positions[1])
+        dist2predator = dist(positions[1], positions[2])
+        max_dist = dist([0, 0], [self.width, self.height])
+        ratios = [dist2prey/max_dist, (dist2prey/max_dist + dist2predator/max_dist)/2, dist2predator/max_dist]
+        attentions = [0, 0, 0]
+        
+        for i in range(3):
+            best_attention = 0
+            best_cost = math.inf
+            
+            for attention in [25, 50, 75, 100]:
+                cost = -(1 - attention/100)
+                
+                if attention == 25:
+                    cost += -ratios[i]
+                elif attention == 50:
+                    cost += -0.5*ratios[i] - 0.4
+                elif attention == 75:
+                    cost += 0.5*ratios[i] - 0.9
+                elif attention == 50:
+                    cost += ratios[i] - 1
+                    
+                if cost < best_cost:
+                    best_cost = cost
+                    best_attention = attention
+            
+            attentions[i] = best_attention
+         
+        total_attn = attentions[0] + attentions[1] + attentions[2]
+        attentions[0] = int(attentions[0]/total_attn * 100)
+        attentions[1] = int(attentions[1]/total_attn * 100)
+        attentions[2] = int(attentions[2]/total_attn * 100)
+     
+        return attentions
 
     
