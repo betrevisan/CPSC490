@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-class QRBM:
+class AttentionQRBM:
     def __init__(self, sampler, visible_dim, hidden_dim):
         self.sampler = sampler
         # Something to try: (np.random.randn(visible_dim, hidden_dim) * 2 - 1) * 1 (https://github.com/mareksubocz/QRBM/blob/master/qrbm/MSQRBM.py)
