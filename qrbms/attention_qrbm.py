@@ -1,3 +1,4 @@
+import random
 import numpy as np
 
 class QRBM:
@@ -13,7 +14,7 @@ class QRBM:
 
     def train(self, train_data, epochs, learning_rate):
         for epoch in range(epochs):
-            datapoint_index = np.random.randrange(0, len(train_data))
+            datapoint_index = random.randrange(0, len(train_data))
             
             init_visible = train_data[datapoint_index]            
             init_hidden = self.sampler.sample_hidden(self, init_visible)
