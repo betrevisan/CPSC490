@@ -18,7 +18,7 @@ class Sampler:
             # Add a connection only to the units that were activated
             if hidden_layer[hidden_unit]:
                 for visible_unit in range(len(model.visible_bias)):
-                    hamiltonian += -1 * self.weights[visible_unit][hidden_unit] * hamiltonian_vars[visible_unit]
+                    hamiltonian += -1 * model.weights[visible_unit][hidden_unit] * hamiltonian_vars[visible_unit]
               
         for visible_unit in range(len(model.visible_bias)):
             hamiltonian += -1 * model.visible_bias[visible_unit] * hamiltonian_vars[visible_unit]
@@ -53,7 +53,7 @@ class Sampler:
             # Add a connection only to the units that were activated
             if visible_layer[visible_unit]:
                 for hidden_unit in range(len(model.hidden_bias)):
-                    hamiltonian += -1 * self.weights[visible_unit][hidden_unit] * hamiltonian_vars[hidden_unit]
+                    hamiltonian += -1 * model.weights[visible_unit][hidden_unit] * hamiltonian_vars[hidden_unit]
               
         for hidden_unit in range(len(model.hidden_bias)):
             hamiltonian += -1 * model.hidden_bias[hidden_unit] * hamiltonian_vars[hidden_unit]
