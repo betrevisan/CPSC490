@@ -1,4 +1,5 @@
 from data import attention_data
+import data
 from rbms import sampler, attention_rbm
 
 TRAIN_SIZE = 100
@@ -16,6 +17,8 @@ def main():
     rbm = attention_rbm.AttentionRBM(rbm_sampler, visible_dim, hidden_dim)
 
     rbm.train(dataset.test_data_bin, EPOCHS)
+
+    rbm.test(dataset.test_data_bin, dataset.test_data_bin_answers)
 
 if __name__ == "__main__":
     main()
