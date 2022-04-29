@@ -1,6 +1,7 @@
+# Data class for the boltzmann for attention allocation
 import numpy as np
 
-class Data:
+class AttentionData:
     np.random.seed(11)
 
     def __init__(self, train_size, test_size, width, height):
@@ -14,3 +15,5 @@ class Data:
         # self.test_data_bin = self.prepare_data(self.test_data)
         # self.train_data_bin_answers = self.prepare_train_answers()
         # self.test_data_bin_answers = self.prepare_test_answers()
+
+    
