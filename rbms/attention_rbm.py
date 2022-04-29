@@ -2,7 +2,8 @@ import torch
 
 class AttentionRBM:
 
-    def __init__(self, visible_dim, hidden_dim):
+    def __init__(self, sampler, visible_dim, hidden_dim):
+        self.sampler = sampler
         self.weights = torch.randn(hidden_dim, visible_dim)
         self.hidden_bias = torch.randn(1, hidden_dim)
         self.visible_bias = torch.randn(1, visible_dim)
