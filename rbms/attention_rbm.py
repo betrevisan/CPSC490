@@ -30,3 +30,18 @@ class AttentionRBM:
                 n += 1.0
             
             print("epoch: " + str(epoch) + " loss: " + str(train_loss/n))
+
+    def test(self, test_data, test_answers):
+        # Testing the RBM Model
+        test_data = torch.FloatTensor(test_data)
+        test_data_answers = torch.FloatTensor(test_answers)
+        test_loss = 0
+        n = 0.
+        for i in range(len(test_data)):
+            visible = test_data[i:i+1]
+            visible_answer = test_data_answers[i:i+1]
+            _,hidden = self.sampler.sample_hidden(visible)
+            _,visible = self.sampler.sample_visible(hidden)
+            test_loss += torch.mean(torch.abs(visible_answer - visible[0][42:]))
+            n += 1.
+        print('test loss: '+str(test_loss/n))
