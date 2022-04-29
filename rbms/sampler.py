@@ -1,5 +1,10 @@
 import numpy as np
 
+# Helper functions
+def sigmoid(x):
+    y = 1 / (1 + np.exp(-x))
+    return y
+
 class SamplerRBM:
     def __init__(self):
         return
