@@ -15,9 +15,9 @@ class AttentionRBM:
             n = 0.0
             for i in range(len(train_data)):
                 init_visible = train_data[i]
-                init_prob_h, init_hidden = self.sampler.sample_hidden(init_visible)
-                curr_prob_v, curr_visible = self.sampler.sample_visible(init_hidden)
-                curr_prob_h, curr_hidden = self.sampler.sample_hidden(curr_visible)
+                init_prob_h, init_hidden = self.sampler.sample_hidden(self, init_visible)
+                curr_prob_v, curr_visible = self.sampler.sample_visible(self, init_hidden)
+                curr_prob_h, curr_hidden = self.sampler.sample_hidden(self, curr_visible)
 
                 self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
             
@@ -51,8 +51,8 @@ class AttentionRBM:
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
-            _,hidden = self.sampler.sample_hidden(visible)
-            _,visible = self.sampler.sample_visible(hidden)
+            _,hidden = self.sampler.sample_hidden(self, visible)
+            _,visible = self.sampler.sample_visible(self, hidden)
             test_loss += np.mean(np.abs(visible_answer - visible[42:]))
             n += 1.
         print("test loss: " + str(test_loss/n))
