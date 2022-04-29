@@ -48,3 +48,28 @@ class QRBM:
     def update_hidden_bias(self, init_hidden, curr_hidden, learning_rate):
         self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
         return
+    
+    def allocate_attention(self, visible_layer):
+        reconstruction = self.reconstruct(visible_layer)
+        # CHECK IF THE INDICES ARE CORRECT
+        allocations_bin = reconstruction[-21:]
+        allocations = self.get_allocations_from_binary(allocations_bin)
+        return allocations
+    
+    def reconstruct(self, visible_layer):
+        hidden_layer = self.sampler.sample_hidden(self, visible_layer)
+        reconstruction = self.sampler.sample_visible(self, hidden_layer)
+        return reconstruction
+    
+    def get_allocations_from_binary(self, binary):
+        prey_binary = [int(b) for b in binary[:7]]
+        prey = int("".join(str(b) for b in prey_binary), 2)
+        agent_binary = [int(b) for b in binary[7:14]]
+        agent = int("".join(str(b) for b in agent_binary), 2)
+        predator_binary = [int(b) for b in binary[14:]]
+        predator = int("".join(str(b) for b in predator_binary), 2)
+        return [prey, agent, predator]
+    
+    def error(self, answer, prediction):
+        error = np.mean(np.abs(answer - prediction))
+        return error
