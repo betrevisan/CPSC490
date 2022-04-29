@@ -1,19 +1,22 @@
-import torch
+import numpy as np
+
 class SamplerRBM:
     def __init__(self):
         return
     
     def sample_hidden(self, model, visible_input):
-        weighted_input = torch.mm(visible_input, model.weights.t())
-        activation = weighted_input + model.hidden_bias.expand_as(weighted_input)
-        prob_h_given_v = torch.sigmoid(activation)
-        return prob_h_given_v, self.layer_given_prob(prob_h_given_v)
+        weighted_input = np.dot(visible_input, model.weights)
+        activation = weighted_input + model.hidden_bias
+        prob_h_given_v = sigmoid(activation)
+        hidden_layer = self.layer_given_prob(prob_h_given_v)
+        return prob_h_given_v, hidden_layer
     
     def sample_visible(self, model, hidden_input):
-        weighted_input = torch.mm(hidden_input, model.weights)
-        activation = weighted_input + model.visible_bias.expand_as(weighted_input)
-        prob_v_given_h = torch.sigmoid(activation)
-        return prob_v_given_h, self.layer_given_prob(prob_v_given_h)
+        weighted_input = np.dot(hidden_input, model.weights.T)
+        activation = weighted_input + model.visible_bias
+        prob_v_given_h = sigmoid(activation)
+        visible_layer = self.layer_given_prob(prob_v_given_h)
+        return prob_v_given_h, visible_layer
     
     def layer_given_prob(self, prob):
         return torch.floor(prob + torch.rand(prob.size()))
