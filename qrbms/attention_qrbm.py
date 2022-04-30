@@ -263,10 +263,10 @@ class AttentionQRBM:
         None
         """
         error = 0
-        hidden = self.sampler.sample_hidden(example)
-        reconstruction = self.sampler.sample_visible(hidden)
+        hidden = self.sampler.sample_hidden(self, example)
+        reconstruction = self.sampler.sample_visible(self, hidden)
         error = self.error(example_answer, reconstruction[42:])
         print("Error: " + str(error))
-        print("Ideal allocations: " + str(self.get_attention_from_bin(example_answer)))
-        print("The model's allocations: " + str(self.get_attention_from_bin(reconstruction[42:])))
+        print("Ideal allocations: " + str(self.get_allocations_from_binary(example_answer)))
+        print("The model's allocations: " + str(self.get_allocations_from_binary(reconstruction[42:])))
         return
