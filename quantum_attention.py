@@ -14,7 +14,7 @@ LEARNING_RATE = 0.1
 
 def main():
     # Generate a data for training and testing given the width and the height of the 
-    # coordinate plane.
+    # coordinate plane
     dataset = attention_data.AttentionData(TRAIN_SIZE, TEST_SIZE, WIDTH, HEIGHT)
 
     # Initialize the QRBM sampler 
