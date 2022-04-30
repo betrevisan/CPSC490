@@ -31,6 +31,8 @@ class AttentionRBM:
         hidden layer, and learning rate.
     test(test_data, test_answers)
         Test the RBM model.
+    error(answer, prediction)
+        Get the error given the actual answer and the model's prediction.
     """
 
     def __init__(self, sampler, visible_dim, hidden_dim):
@@ -86,7 +88,7 @@ class AttentionRBM:
                 # Update hidden bias
                 self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
 
-                error += np.mean(np.abs(init_visible[42:] - curr_visible[42:]))
+                error += self.error(init_visible[42:], curr_visible[42:])
                 n += 1.0
             
             print("epoch: " + str(epoch) + " loss: " + str(error/n))
@@ -165,15 +167,31 @@ class AttentionRBM:
         None
         """
         # Testing the RBM Model
-        test_loss = 0
+        error = 0
         n = 0.
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
             _,hidden = self.sampler.sample_hidden(self, visible)
             _,visible = self.sampler.sample_visible(self, hidden)
-            test_loss += np.mean(np.abs(visible_answer - visible[42:]))
+            error += self.error(visible_answer, visible[42:])
             n += 1.
-        print("test loss: " + str(test_loss/n))
+        print("test loss: " + str(error/n))
         return
+    
+    def error(self, answer, prediction):
+        """Get the error given the actual answer and the model's prediction.
+        Parameters
+        ----------
+        answer : np.Array
+            The actual correct answer
+        prediction : np.Array
+            The model's prediction
+        Returns
+        -------
+        float
+            The error between the actual answer and the prediction
+        """
+        error = np.mean(np.abs(answer - prediction))
+        return error
     
