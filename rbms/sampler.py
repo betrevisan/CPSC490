@@ -50,15 +50,13 @@ class SamplerRBM:
         Returns
         -------
         np.Array of size (visible_dim)
-            The probabiblity distribution of the visible layer
-        np.Array of size (visible_dim)
             The visible layer
         """
         weighted_input = np.dot(hidden_input, model.weights.T)
         activation = weighted_input + model.visible_bias
         prob_v_given_h = sigmoid(activation)
         visible_layer = self.layer_given_prob(prob_v_given_h)
-        return prob_v_given_h, visible_layer
+        return visible_layer
     
     def sample_hidden(self, model, visible_input):
         """Samples the hidden layer of the model given the input from the visible layer.
@@ -71,15 +69,13 @@ class SamplerRBM:
         Returns
         -------
         np.Array of size (hidden_dim)
-            The probabiblity distribution of the hidden layer
-        np.Array of size (hidden_dim)
             The hidden layer
         """
         weighted_input = np.dot(visible_input, model.weights)
         activation = weighted_input + model.hidden_bias
         prob_h_given_v = sigmoid(activation)
         hidden_layer = self.layer_given_prob(prob_h_given_v)
-        return prob_h_given_v, hidden_layer
+        return hidden_layer
     
     def layer_given_prob(self, prob):
         """Get the layer within the model given its probability distribution.
