@@ -33,5 +33,8 @@ def main():
     # Test the QRBM
     qrbm.test(dataset.test_data_bin, dataset.test_data_bin_answers)
 
+    # Run an example
+    qrbm.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
+
 if __name__ == "__main__":
     main()
