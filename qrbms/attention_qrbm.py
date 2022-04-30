@@ -95,8 +95,7 @@ class AttentionQRBM:
             
             error = self.error(init_visible[-21:], curr_visible[-21:])
             print("epoch: " + str(epoch) + " error: " + str(error))
-            
-            return
+        return
     
     def update_weights(self, init_visible, curr_visible, init_hidden, curr_hidden, learning_rate):
         """Update the QRBM's weights given the initial visible and hidden layers, the
