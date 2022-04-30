@@ -67,7 +67,7 @@ class AttentionRBM:
         """
         # Repeat for each epoch
         for epoch in range(epochs):
-            train_loss = 0
+            error = 0
             n = 0.0
 
             # Go over each data point in the training data
@@ -77,15 +77,19 @@ class AttentionRBM:
                 curr_visible = self.sampler.sample_visible(self, init_hidden)
                 curr_hidden = self.sampler.sample_hidden(self, curr_visible)
 
+                # Update weights
                 self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
-            
+
+                # Update visible bias
                 self.update_visible_bias(init_visible, curr_visible, learning_rate)
+
+                # Update hidden bias
                 self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
 
-                train_loss += np.mean(np.abs(init_visible[42:] - curr_visible[42:]))
+                error += np.mean(np.abs(init_visible[42:] - curr_visible[42:]))
                 n += 1.0
             
-            print("epoch: " + str(epoch) + " loss: " + str(train_loss/n))
+            print("epoch: " + str(epoch) + " loss: " + str(error/n))
         return
     
     def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
