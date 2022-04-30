@@ -33,6 +33,9 @@ class SamplerRBM:
     layer_given_prob(prob)
         Get the layer within the model given its probability distribution.
     """
+
+    np.random.seed(11)
+
     def __init__(self):
         return
     
