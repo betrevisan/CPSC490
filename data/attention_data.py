@@ -4,11 +4,78 @@ import math
 
 # Helper functions
 def dist(p1, p2):
+    """Computes the distance between two points.
+    Parameters
+    ----------
+    p1 : List
+        Coordinates of point #1 as [x, y]
+    p2 : List
+        Coordinates of point #2 as [x, y]
+    Returns
+    -------
+    float
+        The distance between p1 and p2
+    """
     return math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
+
 class AttentionData:
+    """
+    The class AttentionData class describes the data for the portion of 
+    the problem that deals with attention allocation.
+    ...
+    Attributes
+    ----------
+    train_size : int
+        Size of the training data
+    test_size : int
+        Size of the test data
+    width : int
+        Width of the coordinate plane
+    height : int
+        Height of the coordinate plane
+    train_data : np.Array
+        Training data
+    train_data_bin : np.Array
+        Training data in binary
+    test_data_bin : np.Array
+        Test data in binary
+    train_data_bin_answers : np.Array
+        Ideal attention allocations for the train data
+    test_data_bin_answers : np.Array
+        Ideal attention allocations for the test data
+
+    Methods
+    -------
+    generate_train_data()
+        Generates training data for the network.
+    generate_test_data()
+        Generates test data for the network.
+    generate_random_loc(lower, upper)
+        Generates a random position given the lower and the upper bounds on the x-axis.
+    best_attention(positions)
+        Gets the ideal attention allocation for a given set of positions.
+    prepare_data_binary(target_data)
+        Transforms the given data into binary.
+    prepare_train_answers()
+        Gets the answers to the training data.
+    prepare_test_answers()
+        Gets the answers to the test data.
+    """
     np.random.seed(11)
 
     def __init__(self, train_size, test_size, width, height):
+        """
+        Parameters
+        ----------
+        train_size : int
+            Size of the training data
+        test_size : int
+            Size of the test data
+        width : int
+            Width of the coordinate plane
+        height : int
+            Height of the coordinate plane
+        """
         self.train_size = train_size
         self.test_size = test_size
         self.width = width
@@ -20,9 +87,18 @@ class AttentionData:
         self.train_data_bin_answers = self.prepare_train_answers()
         self.test_data_bin_answers = self.prepare_test_answers()
 
-    # Generate training data for the network
     def generate_train_data(self):
-        # Each datapoint follows the format [prey_loc, agent_loc, predator_loc, prey_attn, agent_attn, predator_attn]
+        """Generates training data for the network.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Training data
+        """
+        # Each datapoint follows the format [prey_loc, agent_loc, predator_loc, prey_attn,
+        # agent_attn, predator_attn]
         data = []
         for _ in range(self.train_size):
             datapoint = []
@@ -41,9 +117,18 @@ class AttentionData:
         
         return np.array(data)
     
-    # Generate test data for the network
     def generate_test_data(self):
-        # Each datapoint follows the format [prey_loc, agent_loc, predator_loc, prey_attn, agent_attn, predator_attn]
+        """Generates test data for the network.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Test data
+        """
+        # Each datapoint follows the format [prey_loc, agent_loc, predator_loc, prey_attn,
+        # agent_attn, predator_attn]
         data = []
         for _ in range(self.test_size):
             datapoint = []
@@ -62,12 +147,32 @@ class AttentionData:
         
         return np.array(data)
     
-    # Generate a random position given the lower and the upper bounds on the x-axis
     def generate_random_loc(self, lower, upper):
+        """Generates a random position given the lower and the upper bounds on the x-axis.
+        Parameters
+        ----------
+        lower : float
+            Lower bound on the random location's x-coordinate
+        upper : float
+            Upper bound on the random location's x-coordinate
+        Returns
+        -------
+        List
+            Random location as [x,y]
+        """
         return [np.random.randint(lower, upper+1), np.random.randint(0, self.height), -1]
     
-    # Gets the ideal attention allocation for a given set of positions
     def best_attention(self, positions):                
+        """Gets the ideal attention allocation for a given set of positions.
+        Parameters
+        ----------
+        positions : List
+            List of three positions [prey, agent, predator]
+        Returns
+        -------
+        List
+            The list of attention allocations in the form [prey, agent, prey]
+        """
         dist2prey = dist(positions[0], positions[1])
         dist2predator = dist(positions[1], positions[2])
         max_dist = dist([0, 0], [self.width, self.height])
@@ -104,6 +209,16 @@ class AttentionData:
         return attentions
     
     def prepare_data_binary(self, target_data):
+        """Transforms the given data into binary.
+        Parameters
+        ----------
+        target_data : np.Array
+            Data in decimal
+        Returns
+        -------
+        np.Array
+            Data in binary
+        """
         data_bin = []
         for i in range(len(target_data)):
             bin = []
@@ -115,12 +230,30 @@ class AttentionData:
         return np.array(data_bin)
     
     def prepare_train_answers(self):
+        """Gets the answers to the training data.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Answers to the training data
+        """
         answers = []
         for i in range(len(self.train_data_bin)):
             answers.append(self.train_data_bin[i][42:])
         return np.array(answers)
 
     def prepare_test_answers(self):
+        """Gets the answers to the test data.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Answers to the test data
+        """
         answers = []
         for i in range(len(self.test_data_bin)):
             best_alloc = self.best_attention(self.test_data[i][:3])
