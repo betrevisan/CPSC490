@@ -252,4 +252,13 @@ class AttentionRBM:
         """
         error = np.mean(np.abs(answer - prediction))
         return error
+
+    def run_example(self, example, example_answer):
+        error = 0
+        hidden = self.sampler.sample_hidden(example)
+        reconstruction = self.sampler.sample_visible(hidden)
+        error = self.error(example_answer, reconstruction[42:])
+        print("Error: " + str(error))
+        print("Ideal allocations: " + str(self.get_attention_from_bin(example_answer)))
+        print("The model's allocations: " + str(self.get_attention_from_bin(reconstruction[42:])))
     
