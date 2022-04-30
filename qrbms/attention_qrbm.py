@@ -30,6 +30,8 @@ class AttentionQRBM:
     update_hidden_bias(init_hidden, curr_hidden, learning_rate)
         Update the biases of the hidden layer given the initial hidden layer, current
         hidden layer, and learning rate.
+    test(test_data, test_answers)
+        Test the QRBM model.
     allocate_attention(visible_layer)
         Allocate attention for the prey, agent, and predator given the visible layer.
     reconstruct(visible_layer)
@@ -154,6 +156,31 @@ class AttentionQRBM:
         None
         """
         self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
+        return
+    
+    def test(self, test_data, test_answers):
+        """Test the QRBM model.
+        Parameters
+        ----------
+        test_data : np.Array
+            The test data
+        test_answers : np.Array
+            The answers to the test data
+        Returns
+        -------
+        None
+        """
+        # Testing the QRBM Model
+        error = 0
+        n = 0.
+        for i in range(len(test_data)):
+            visible = test_data[i]
+            visible_answer = test_answers[i]
+            hidden = self.sampler.sample_hidden(self, visible)
+            visible = self.sampler.sample_visible(self, hidden)
+            error += self.error(visible_answer, visible[42:])
+            n += 1.
+        print("test loss: " + str(error/n))
         return
     
     def allocate_attention(self, visible_layer):
