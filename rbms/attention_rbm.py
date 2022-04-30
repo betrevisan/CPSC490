@@ -31,6 +31,13 @@ class AttentionRBM:
         hidden layer, and learning rate.
     test(test_data, test_answers)
         Test the RBM model.
+    allocate_attention(visible_layer)
+        Allocate attention for the prey, agent, and predator given the visible layer.
+    reconstruct(visible_layer)
+        Get the reconstruction of the visible layer given its initial layer.
+    get_allocations_from_binary(binary)
+        Get the allocations for the prey, agent, and predator in decimal numbers given
+        the binary numbers.
     error(answer, prediction)
         Get the error given the actual answer and the model's prediction.
     """
@@ -178,6 +185,57 @@ class AttentionRBM:
             n += 1.
         print("test loss: " + str(error/n))
         return
+    
+    def allocate_attention(self, visible_layer):
+        """Allocate attention for the prey, agent, and predator given the visible layer.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        List
+            The list of attention allocations in the form [prey, agent, prey]
+        """
+        reconstruction = self.reconstruct(visible_layer)
+        allocations_bin = reconstruction[42:]
+        allocations = self.get_allocations_from_binary(allocations_bin)
+        return allocations
+
+    def reconstruct(self, visible_layer):
+        """Get the reconstruction of the visible layer given its initial layer.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        np.Array
+            The reconstructed visible layer
+        """
+        hidden_layer = self.sampler.sample_hidden(self, visible_layer)
+        reconstruction = self.sampler.sample_visible(self, hidden_layer)
+        return reconstruction
+    
+    def get_allocations_from_binary(self, binary):
+        """Get the allocations for the prey, agent, and predator in decimal numbers given
+        the binary numbers.
+        Parameters
+        ----------
+        binary : np.Array
+            The attention allocations in binary
+        Returns
+        -------
+        List
+            The list of attention allocations in the form [prey, agent, prey]
+        """
+        prey_binary = [int(b) for b in binary[:7]]
+        prey = int("".join(str(b) for b in prey_binary), 2)
+        agent_binary = [int(b) for b in binary[7:14]]
+        agent = int("".join(str(b) for b in agent_binary), 2)
+        predator_binary = [int(b) for b in binary[14:]]
+        predator = int("".join(str(b) for b in predator_binary), 2)
+        return [prey, agent, predator]
     
     def error(self, answer, prediction):
         """Get the error given the actual answer and the model's prediction.
