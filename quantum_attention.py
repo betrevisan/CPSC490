@@ -1,6 +1,6 @@
 """ Predator-Prey Task for Attention Allocation (Quantum Approach)
 This implements the Predator-Prey task for attention allocation within quantum
-computing using a quantum boltzmann machine sampled with quantum annealing.
+computing using a quantum restricted boltzmann machine sampled with quantum annealing.
 """
 
 from data import attention_data
