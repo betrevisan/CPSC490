@@ -181,8 +181,8 @@ class AttentionRBM:
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
-            _,hidden = self.sampler.sample_hidden(self, visible)
-            _,visible = self.sampler.sample_visible(self, hidden)
+            hidden = self.sampler.sample_hidden(self, visible)
+            visible = self.sampler.sample_visible(self, hidden)
             error += self.error(visible_answer, visible[42:])
             n += 1.
         print("test loss: " + str(error/n))
