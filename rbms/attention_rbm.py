@@ -40,6 +40,8 @@ class AttentionRBM:
         the binary numbers.
     error(answer, prediction)
         Get the error given the actual answer and the model's prediction.
+    run_example(example, example_answer)
+        Runs one specific example throught the model.
     """
 
     def __init__(self, sampler, visible_dim, hidden_dim):
@@ -254,6 +256,17 @@ class AttentionRBM:
         return error
 
     def run_example(self, example, example_answer):
+        """Runs one specific example throught the model.
+        Parameters
+        ----------
+        example : np.Array
+            The example
+        example_answer : np.Array
+            The correct answer to the example
+        Returns
+        -------
+        None
+        """
         error = 0
         hidden = self.sampler.sample_hidden(example)
         reconstruction = self.sampler.sample_visible(hidden)
@@ -261,4 +274,5 @@ class AttentionRBM:
         print("Error: " + str(error))
         print("Ideal allocations: " + str(self.get_attention_from_bin(example_answer)))
         print("The model's allocations: " + str(self.get_attention_from_bin(reconstruction[42:])))
+        return
     
