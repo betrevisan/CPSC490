@@ -236,3 +236,19 @@ class MovementRBM:
         y_binary = [int(b) for b in binary[7:]]
         y = int("".join(str(b) for b in y_binary), 2)
         return [x, y]
+
+    def error(self, answer, prediction):
+        """Get the error given the actual answer and the model's prediction.
+        Parameters
+        ----------
+        answer : np.Array
+            The actual correct answer
+        prediction : np.Array
+            The model's prediction
+        Returns
+        -------
+        float
+            The error between the actual answer and the prediction
+        """
+        error = np.mean(np.abs(answer - prediction))
+        return error
