@@ -86,6 +86,7 @@ class AttentionData:
         self.test_data_bin = self.prepare_data_binary(self.test_data)
         self.train_data_bin_answers = self.prepare_train_answers()
         self.test_data_bin_answers = self.prepare_test_answers()
+        return
 
     def generate_train_data(self):
         """Generates training data for the network.
