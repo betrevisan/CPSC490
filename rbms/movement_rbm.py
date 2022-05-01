@@ -162,3 +162,28 @@ class MovementRBM:
         """
         self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
         return
+
+    def test(self, test_data, test_answers):
+        """Test the RBM model.
+        Parameters
+        ----------
+        test_data : np.Array
+            The test data
+        test_answers : np.Array
+            The answers to the test data
+        Returns
+        -------
+        None
+        """
+        # Testing the RBM Model
+        error = 0
+        n = 0.
+        for i in range(len(test_data)):
+            visible = test_data[i]
+            visible_answer = test_answers[i]
+            hidden = self.sampler.sample_hidden(self, visible)
+            visible = self.sampler.sample_visible(self, hidden)
+            error += self.error(visible_answer, visible[-14:])
+            n += 1.
+        print("test loss: " + str(error/n))
+        return
