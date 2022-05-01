@@ -31,7 +31,7 @@ class MovementRBM:
         hidden layer, and learning rate.
     test(test_data, test_answers)
         Test the RBM model.
-    movem(visible_layer)
+    move(visible_layer)
         Decide where to move to given the visible layer.
     reconstruct(visible_layer)
         Get the reconstruction of the visible layer given its initial layer.
@@ -187,3 +187,52 @@ class MovementRBM:
             n += 1.
         print("test loss: " + str(error/n))
         return
+    
+    def move(self, visible_layer):
+        """Decide where to move to given the visible layer.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        List
+            The location the agent should move to as [x, y]
+        """
+        reconstruction = self.reconstruct(visible_layer)
+        location_bin = reconstruction[-14:]
+        allocations = self.get_location_from_binary(location_bin)
+        return allocations
+    
+    def reconstruct(self, visible_layer):
+        """Get the reconstruction of the visible layer given its initial layer.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        np.Array
+            The reconstructed visible layer
+        """
+        hidden_layer = self.sampler.sample_hidden(self, visible_layer)
+        reconstruction = self.sampler.sample_visible(self, hidden_layer)
+        return reconstruction
+    
+    def get_location_from_binary(self, binary):
+        """Get the location the agent moved to in decimal numbers given
+        the binary numbers.
+        Parameters
+        ----------
+        binary : np.Array
+            The location in binary
+        Returns
+        -------
+        List
+            The location the agent should move to as [x, y]
+        """
+        x_binary = [int(b) for b in binary[:7]]
+        x = int("".join(str(b) for b in x_binary), 2)
+        y_binary = [int(b) for b in binary[7:]]
+        y = int("".join(str(b) for b in y_binary), 2)
+        return [x, y]
