@@ -61,3 +61,104 @@ class MovementRBM:
         self.visible_bias = np.random.rand(visible_dim)
         self.hidden_bias = np.random.rand(hidden_dim)
         return
+    
+    def train(self, train_data, epochs, learning_rate):
+        """Trains the RBM model given the number of epochs and the learning rate.
+        Parameters
+        ----------
+        train_data : np.Array
+            The training data
+        epochs : int
+            Number of epochs to train for
+        learning_rate : float
+            Learning rate for training
+        Returns
+        -------
+        None
+        """
+        # Repeat for each epoch
+        for epoch in range(epochs):
+            error = 0
+            n = 0.0
+
+            # Go over each data point in the training data
+            for i in range(len(train_data)):
+                init_visible = train_data[i]
+                init_hidden = self.sampler.sample_hidden(self, init_visible)
+                curr_visible = self.sampler.sample_visible(self, init_hidden)
+                curr_hidden = self.sampler.sample_hidden(self, curr_visible)
+
+                # Update weights
+                self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
+
+                # Update visible bias
+                self.update_visible_bias(init_visible, curr_visible, learning_rate)
+
+                # Update hidden bias
+                self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
+
+                error += self.error(init_visible[-14:], curr_visible[-14:])
+                n += 1.0
+            
+            print("epoch: " + str(epoch) + " loss: " + str(error/n))
+        return
+    
+    def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
+        """Update the RBM's weights given the initial visible and hidden layers, the
+        current visible and hidden layers, and the learning rate.
+        Parameters
+        ----------
+        init_visible : np.Array
+            The initial visible layer
+        init_hidden : np.Array
+            The initial hidden layer
+        curr_visible : np.Array
+            The current visible layer
+        curr_hidden : np.Array
+            The current hidden layer
+        learning_rate : float
+            Learning rate for weight updates
+        Returns
+        -------
+        None
+        """
+        positive_gradient = np.outer(init_visible, init_hidden)
+        negative_gradient = np.outer(curr_visible, curr_hidden)
+        self.weights += learning_rate * (positive_gradient - negative_gradient)
+        return
+    
+    def update_visible_bias(self, init_visible, curr_visible, learning_rate):
+        """Update the biases of the visible layer given the initial visible layer, current
+        visible layer, and learning rate.
+        Parameters
+        ----------
+        init_visible : np.Array
+            The initial visible layer
+        curr_visible : np.Array
+            The current visible layer
+        learning_rate : float
+            Learning rate for bias updates
+        Returns
+        -------
+        None
+        """
+        self.visible_bias += learning_rate * (init_visible - curr_visible)
+        return
+    
+    def update_hidden_bias(self, init_hidden, curr_hidden, learning_rate):
+        """Update the biases of the hidden layer given the initial hidden layer, current
+        hidden layer, and learning rate.
+        Parameters
+        ----------
+        init_hidden : np.Array
+            The initial hidden layer
+        curr_hidden : np.Array
+            The current hidden layer
+        learning_rate : float
+            Learning rate for bias updates
+        Returns
+        -------
+        None
+        """
+        self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
+        return
