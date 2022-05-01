@@ -252,3 +252,24 @@ class MovementRBM:
         """
         error = np.mean(np.abs(answer - prediction))
         return error
+
+    def run_example(self, example, example_answer):
+        """Runs one specific example throught the model.
+        Parameters
+        ----------
+        example : np.Array
+            The example
+        example_answer : np.Array
+            The correct answer to the example
+        Returns
+        -------
+        None
+        """
+        error = 0
+        hidden = self.sampler.sample_hidden(self, example)
+        reconstruction = self.sampler.sample_visible(self, hidden)
+        error = self.error(example_answer, reconstruction[-14:])
+        print("Error: " + str(error))
+        print("Ideal allocations: " + str(self.get_location_from_binary(example_answer)))
+        print("The model's allocations: " + str(self.get_location_from_binary(reconstruction[-14:])))
+        return
