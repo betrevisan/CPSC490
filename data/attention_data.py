@@ -1,4 +1,3 @@
-# Data class for the boltzmann for attention allocation
 import numpy as np
 import math
 
