@@ -20,7 +20,7 @@ def main():
     dataset = data.Data(TRAIN_SIZE, TEST_SIZE, MAX_SPEED, WIDTH, HEIGHT)
 
     # Initialize the RBM sampler, which will be used in the RBM
-    rbm_sampler = quantum_sampler.SamplerRBM()
+    rbm_sampler = quantum_sampler.SamplerQRBM()
 
     # Define visible and hidden dimensions of the RBM
     visible_dim = len(dataset.train_data_bin[0])
