@@ -265,6 +265,6 @@ class MovementRBM:
         reconstruction = self.sampler.sample_visible(self, hidden)
         error = self.error(example_answer, reconstruction[42:])
         print("Error: " + str(error))
-        print("Ideal allocations: " + str(self.get_location_from_binary(example_answer)))
-        print("The model's allocations: " + str(self.get_location_from_binary(reconstruction[42:])))
+        print("Ideal movement location: " + str(self.get_location_from_binary(example_answer)))
+        print("The model's movement location: " + str(self.get_location_from_binary(reconstruction[42:])))
         return
