@@ -41,7 +41,7 @@ class RBM:
     get_allocations_from_binary(binary)
         Get the allocations for the prey, agent, and predator in decimal numbers given
         the binary numbers.
-    get_movement_from_binary(binary)
+    get_movement_from_binary(self, binary)
         Get the direction of movement in decimal numbers given the binary numbers.
     error(answer, prediction)
         Get the error given the actual answer and the model's prediction.
@@ -187,6 +187,75 @@ class RBM:
         print("test loss: " + str(error/len(test_data)))
         return
     
+    def move(self, visible_layer):
+        """Given the visible layer (real locations), allocate attention and decide where to 
+        move to based on the perceived locations.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        List
+            The location the agent should move to
+        """
+        reconstruction = self.reconstruct(visible_layer)
+        loc_bin = reconstruction[63:]
+        loc = self.get_loc_from_binary(loc_bin)
+        return loc
+
+    def reconstruct(self, visible_layer):
+        """Get the reconstruction of the visible layer given its initial layer.
+        Parameters
+        ----------
+        visible_layer : np.Array
+            The visible layer
+        Returns
+        -------
+        np.Array
+            The reconstructed visible layer
+        """
+        hidden_layer = self.sampler.sample_hidden(self, visible_layer)
+        reconstruction = self.sampler.sample_visible(self, hidden_layer)
+        return reconstruction
+    
+    def get_allocations_from_binary(self, binary):
+        """Get the allocations for the prey, agent, and predator in decimal numbers given
+        the binary numbers.
+        Parameters
+        ----------
+        binary : np.Array
+            The attention allocations in binary
+        Returns
+        -------
+        List
+            The list of attention allocations in the form [prey, agent, prey]
+        """
+        prey_binary = [int(b) for b in binary[:7]]
+        prey = int("".join(str(b) for b in prey_binary), 2)
+        agent_binary = [int(b) for b in binary[7:14]]
+        agent = int("".join(str(b) for b in agent_binary), 2)
+        predator_binary = [int(b) for b in binary[14:]]
+        predator = int("".join(str(b) for b in predator_binary), 2)
+        return [prey, agent, predator]
+    
+    def get_loc_from_binary(self, binary):
+        """Get the location in decimal numbers given the binary numbers.
+        Parameters
+        ----------
+        binary : np.Array
+            The location in binary
+        Returns
+        -------
+        List
+            The location in decimals
+        """
+        x_binary = [int(b) for b in binary[:7]]
+        x = int("".join(str(b) for b in x_binary), 2)
+        y_binary = [int(b) for b in binary[7:]]
+        y = int("".join(str(b) for b in y_binary), 2)
+        return [x, y]
+    
     def error(self, answer, prediction):
         """Get the error given the actual answer and the model's prediction.
         Parameters
@@ -202,4 +271,27 @@ class RBM:
         """
         error = np.mean(np.abs(answer - prediction))
         return error
+    
+    def run_example(self, example, example_answer):
+        """Runs one specific example throught the model.
+        Parameters
+        ----------
+        example : np.Array
+            The example
+        example_answer : np.Array
+            The correct answer to the example
+        Returns
+        -------
+        None
+        """
+        error = 0
+        hidden = self.sampler.sample_hidden(self, example)
+        reconstruction = self.sampler.sample_visible(self, hidden)
+        error = self.error(example_answer, reconstruction[42:])
+        print("Error: " + str(error))
+        print("Ideal allocations: " + str(self.get_allocations_from_binary(example_answer[:21])))
+        print("The model's allocations: " + str(self.get_allocations_from_binary(reconstruction[42:63])))
+        print("Ideal movement location: " + str(self.get_loc_from_binary(example_answer[21:])))
+        print("The model's movement location: " + str(self.get_loc_from_binary(reconstruction[63:])))
+        return
     
