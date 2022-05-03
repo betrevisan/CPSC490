@@ -62,9 +62,9 @@ class RBM:
         """
 
         self.sampler = sampler
-        self.weights = np.random.rand(visible_dim, hidden_dim)
-        self.visible_bias = np.random.rand(visible_dim)
-        self.hidden_bias = np.random.rand(hidden_dim)
+        self.weights = np.random.randn(visible_dim, hidden_dim)
+        self.visible_bias = np.random.randn(visible_dim)
+        self.hidden_bias = np.random.randn(hidden_dim)
         return
 
     def train(self, train_data, epochs, learning_rate):

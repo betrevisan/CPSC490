@@ -58,9 +58,9 @@ class AttentionRBM:
         """
 
         self.sampler = sampler
-        self.weights = np.random.rand(visible_dim, hidden_dim)
-        self.visible_bias = np.random.rand(visible_dim)
-        self.hidden_bias = np.random.rand(hidden_dim)
+        self.weights = np.random.randn(visible_dim, hidden_dim)
+        self.visible_bias = np.random.randn(visible_dim)
+        self.hidden_bias = np.random.randn(hidden_dim)
         return
     
     def train(self, train_data, epochs, learning_rate):
@@ -80,6 +80,7 @@ class AttentionRBM:
         # Repeat for each epoch
         for epoch in range(epochs):
             datapoint_index = random.randrange(0, len(train_data))
+            print("index: " + str(datapoint_index))
 
             init_visible = train_data[datapoint_index]
             init_hidden = self.sampler.sample_hidden(self, init_visible)
