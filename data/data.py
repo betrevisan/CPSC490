@@ -88,9 +88,9 @@ class Data:
         self.width = width
         self.height = height
         self.train_data = self.generate_train_data()
-        # self.test_data = self.generate_test_data()
-        # self.train_data_bin = self.prepare_data_binary(self.train_data)
-        # self.test_data_bin = self.prepare_data_binary(self.test_data)
+        self.test_data = self.generate_test_data()
+        self.train_data_bin = self.prepare_data_binary(self.train_data)
+        self.test_data_bin = self.prepare_data_binary(self.test_data)
         # self.train_data_bin_answers = self.prepare_train_answers()
         # self.test_data_bin_answers = self.prepare_test_answers()
         return
@@ -126,6 +126,39 @@ class Data:
 
             # Get the best best location to move to for the given positions
             datapoint.append(self.best_loc(perceived_locs))
+            
+            data.append(datapoint)
+        
+        return np.array(data)
+    
+    def generate_test_data(self):
+        """Generates test data for the network.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Test data
+        """
+        # Each datapoint follows the format:
+        # [prey_loc, agent_loc, predator_loc, prey_attn, agent_attn, predator_attn, best_loc]
+        data = []
+        for _ in range(self.test_size):
+            datapoint = []
+            # Generate random positions for the agent, prey, and predator
+            # Prey's position
+            datapoint.append(self.generate_random_loc())
+            # Agent's position
+            datapoint.append(self.generate_random_loc())
+            # Predator's position
+            datapoint.append(self.generate_random_loc())
+
+            # Unknown best attention allocation
+            datapoint.append([33, 33, 33])
+
+            # Unknown best position to move to
+            datapoint.append([33, 33, -1])
             
             data.append(datapoint)
         
@@ -252,3 +285,24 @@ class Data:
                 best_loc = loc
     
         return best_loc
+
+    def prepare_data_binary(self, target_data):
+        """Transforms the given data into binary.
+        Parameters
+        ----------
+        target_data : np.Array
+            Data in decimal
+        Returns
+        -------
+        np.Array
+            Data in binary
+        """
+        data_bin = []
+        for i in range(len(target_data)):
+            bin = []
+            for j in range(5):
+                for k in range(3):
+                    if target_data[i][j][k] >= 0:
+                        bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
+            data_bin.append(np.concatenate(np.array(bin)))
+        return np.array(data_bin)
