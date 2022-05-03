@@ -49,8 +49,8 @@ class AttentionData:
         Generates training data for the network.
     generate_test_data()
         Generates test data for the network.
-    generate_random_loc(lower, upper)
-        Generates a random position given the lower and the upper bounds on the x-axis.
+    generate_random_loc()
+        Generates a random position within the coordinate plane.
     best_attention(positions)
         Gets the ideal attention allocation for a given set of positions.
     prepare_data_binary(target_data)
@@ -104,11 +104,11 @@ class AttentionData:
             datapoint = []
             # Generate random positions for the agent, prey, and predator
             # Prey's position
-            datapoint.append(self.generate_random_loc(0, self.width/3))
+            datapoint.append(self.generate_random_loc())
             # Agent's position
-            datapoint.append(self.generate_random_loc(self.width/3, 2*self.width/3))
+            datapoint.append(self.generate_random_loc())
             # Predator's position
-            datapoint.append(self.generate_random_loc(2*self.width/3, self.width))
+            datapoint.append(self.generate_random_loc())
 
             # Get the best attention allocations for the given positions
             datapoint.append(self.best_attention(datapoint))
@@ -134,11 +134,11 @@ class AttentionData:
             datapoint = []
             # Generate random positions for the agent, prey, and predator
             # Prey's position
-            datapoint.append(self.generate_random_loc(0, self.width/3))
+            datapoint.append(self.generate_random_loc())
             # Agent's position
-            datapoint.append(self.generate_random_loc(self.width/3, 2*self.width/3))
+            datapoint.append(self.generate_random_loc())
             # Predator's position
-            datapoint.append(self.generate_random_loc(2*self.width/3, self.width))
+            datapoint.append(self.generate_random_loc())
 
             # Unknown best attention allocation
             datapoint.append([33, 33, 33])
@@ -147,20 +147,17 @@ class AttentionData:
         
         return np.array(data)
     
-    def generate_random_loc(self, lower, upper):
-        """Generates a random position given the lower and the upper bounds on the x-axis.
+    def generate_random_loc(self):
+        """Generates a random position within the coordinate plane.
         Parameters
         ----------
-        lower : float
-            Lower bound on the random location's x-coordinate
-        upper : float
-            Upper bound on the random location's x-coordinate
+        Noen
         Returns
         -------
         List
             Random location as [x,y]
         """
-        return [np.random.randint(lower, upper+1), np.random.randint(0, self.height), -1]
+        return [np.random.randint(0, self.width), np.random.randint(0, self.height), -1]
     
     def best_attention(self, positions):                
         """Gets the ideal attention allocation for a given set of positions.
