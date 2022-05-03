@@ -91,8 +91,8 @@ class Data:
         self.test_data = self.generate_test_data()
         self.train_data_bin = self.prepare_data_binary(self.train_data)
         self.test_data_bin = self.prepare_data_binary(self.test_data)
-        # self.train_data_bin_answers = self.prepare_train_answers()
-        # self.test_data_bin_answers = self.prepare_test_answers()
+        self.train_data_bin_answers = self.prepare_train_answers()
+        self.test_data_bin_answers = self.prepare_test_answers()
         return
 
     def generate_train_data(self):
@@ -306,3 +306,51 @@ class Data:
                         bin.append([int(b) for b in list('{0:07b}'.format(int(target_data[i][j][k])))])
             data_bin.append(np.concatenate(np.array(bin)))
         return np.array(data_bin)
+
+    def prepare_train_answers(self):
+        """Gets the answers to the training data.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Answers to the training data
+        """
+        answers = []
+        for i in range(len(self.train_data_bin)):
+            answers.append(self.train_data_bin[i][42:])
+        return np.array(answers)
+
+    def prepare_test_answers(self):
+        """Gets the answers to the test data.
+        Parameters
+        ----------
+        None
+        Returns
+        -------
+        np.Array
+            Answers to the test data
+        """
+        answers = []
+        for i in range(len(self.test_data_bin)):
+            best_alloc = self.best_attention(self.test_data[i][:3])
+
+            answer = list(self.test_data[i][:3])
+            answer.append(best_alloc)
+
+            # Get the perceived locations
+            perceived_locs = self.get_perceived_locs(answer)
+
+            # Get the best best location to move to for the given positions
+            answer.append(self.best_loc(perceived_locs))
+
+            answer = answer[3:]
+
+            answer_bin = []
+            for j in range(len(answer)):
+                for k in range(3):
+                    if answer[j][k] >= 0:
+                        answer_bin.append([int(b) for b in list('{0:07b}'.format(int(answer[j][k])))])
+            answers.append(np.concatenate(np.array(answer_bin)))
+        return np.array(answers)
