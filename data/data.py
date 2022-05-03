@@ -223,6 +223,17 @@ class Data:
         return attentions
 
     def get_perceived_locs(self, datapoint):
+        """Gets the perceived locations based on the real locations and the allocated attention.
+        Parameters
+        ----------
+        datapoint : List
+            List of the positions of each character and the attention allocation of each
+            each one of them.
+        Returns
+        -------
+        List
+            The list of perceieved locations for each character [prey, agent, predator]
+        """
         locs = datapoint[:3]
         attentions = datapoint[3]
         perceived_locs = locs
