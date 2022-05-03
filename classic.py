@@ -4,8 +4,7 @@ restricted boltzmann machine.
 """
 
 from data import data
-from rbms import sampler
-# from dbms import dbm
+from rbms import sampler, rbm
 
 TRAIN_SIZE = 100
 TEST_SIZE = 30
@@ -18,22 +17,16 @@ def main():
     # Generate a data for training and testing given the width and the height of the 
     # coordinate plane and the maximum speed
     dataset = data.Data(TRAIN_SIZE, TEST_SIZE, MAX_SPEED, WIDTH, HEIGHT)
-    print(dataset.train_data.shape)
-    print(dataset.test_data.shape)
-    print(dataset.train_data_bin.shape)
-    print(dataset.test_data_bin.shape)
-    print(dataset.test_data_bin_answers.shape)
-    print(dataset.test_data_bin_answers[0])
 
-    # Initialize the RBM sampler, which will be used in the DBM
+    # Initialize the RBM sampler, which will be used in the RBM
     rbm_sampler = sampler.SamplerRBM()
 
-#     # Define visible and hidden dimensions of the DBM
-#     visible_dim = len(dataset.train_data_bin[0])
-#     hidden_dim = 15
+    # Define visible and hidden dimensions of the RBM
+    visible_dim = len(dataset.train_data_bin[0])
+    hidden_dim = 15
 
-#     # Initialize the DBM given the sampler and the dimensions
-#     dbm = movement_rbm.MovementRBM(rbm_sampler, visible_dim, hidden_dim)
+    # Initialize the RBM given the sampler and the dimensions
+    rbm_model = rbm.RBM(rbm_sampler, visible_dim, hidden_dim)
 
 #     # Train the RBM for a given number of epochs with a given learning rate
 #     rbm.train(dataset.test_data_bin, EPOCHS, 0.1)
