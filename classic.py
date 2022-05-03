@@ -34,8 +34,8 @@ def main():
     # Test the RBM
     rbm_model.test(dataset.test_data_bin, dataset.test_data_bin_answers)
 
-#     # Run an example
-#     rbm.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
+    # Run an example
+    rbm_model.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
 
     return
 
