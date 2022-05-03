@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class MovementRBM:
     """
@@ -78,29 +79,25 @@ class MovementRBM:
         """
         # Repeat for each epoch
         for epoch in range(epochs):
-            error = 0
-            n = 0.0
-
-            # Go over each data point in the training data
-            for i in range(len(train_data)):
-                init_visible = train_data[i]
-                init_hidden = self.sampler.sample_hidden(self, init_visible)
-                curr_visible = self.sampler.sample_visible(self, init_hidden)
-                curr_hidden = self.sampler.sample_hidden(self, curr_visible)
-
-                # Update weights
-                self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
-
-                # Update visible bias
-                self.update_visible_bias(init_visible, curr_visible, learning_rate)
-
-                # Update hidden bias
-                self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
-
-                error += self.error(init_visible[-14:], curr_visible[-14:])
-                n += 1.0
+            datapoint_index = random.randrange(0, len(train_data))
             
-            print("epoch: " + str(epoch) + " loss: " + str(error/n))
+            init_visible = train_data[datapoint_index]
+            init_hidden = self.sampler.sample_hidden(self, init_visible)
+
+            curr_visible = self.sampler.sample_visible(self, init_hidden)
+            curr_hidden = self.sampler.sample_hidden(self, curr_visible)
+
+            # Update weights
+            self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
+
+            # Update visible bias
+            self.update_visible_bias(init_visible, curr_visible, learning_rate)
+
+            # Update hidden bias
+            self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
+
+            error = self.error(init_visible[42:], curr_visible[42:])            
+            print("epoch: " + str(epoch) + " loss: " + str(error))
         return
     
     def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
@@ -177,15 +174,13 @@ class MovementRBM:
         """
         # Testing the RBM Model
         error = 0
-        n = 0.
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
             hidden = self.sampler.sample_hidden(self, visible)
             visible = self.sampler.sample_visible(self, hidden)
-            error += self.error(visible_answer, visible[-14:])
-            n += 1.
-        print("test loss: " + str(error/n))
+            error += self.error(visible_answer, visible[42:])
+        print("test loss: " + str(error/len(test_data)))
         return
     
     def move(self, visible_layer):
@@ -200,7 +195,7 @@ class MovementRBM:
             The location the agent should move to as [x, y]
         """
         reconstruction = self.reconstruct(visible_layer)
-        location_bin = reconstruction[-14:]
+        location_bin = reconstruction[42:]
         allocations = self.get_location_from_binary(location_bin)
         return allocations
     
@@ -268,8 +263,8 @@ class MovementRBM:
         error = 0
         hidden = self.sampler.sample_hidden(self, example)
         reconstruction = self.sampler.sample_visible(self, hidden)
-        error = self.error(example_answer, reconstruction[-14:])
+        error = self.error(example_answer, reconstruction[42:])
         print("Error: " + str(error))
         print("Ideal allocations: " + str(self.get_location_from_binary(example_answer)))
-        print("The model's allocations: " + str(self.get_location_from_binary(reconstruction[-14:])))
+        print("The model's allocations: " + str(self.get_location_from_binary(reconstruction[42:])))
         return

@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class AttentionRBM:
     """
@@ -78,29 +79,25 @@ class AttentionRBM:
         """
         # Repeat for each epoch
         for epoch in range(epochs):
-            error = 0
-            n = 0.0
+            datapoint_index = random.randrange(0, len(train_data))
 
-            # Go over each data point in the training data
-            for i in range(len(train_data)):
-                init_visible = train_data[i]
-                init_hidden = self.sampler.sample_hidden(self, init_visible)
-                curr_visible = self.sampler.sample_visible(self, init_hidden)
-                curr_hidden = self.sampler.sample_hidden(self, curr_visible)
-
-                # Update weights
-                self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
-
-                # Update visible bias
-                self.update_visible_bias(init_visible, curr_visible, learning_rate)
-
-                # Update hidden bias
-                self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
-
-                error += self.error(init_visible[42:], curr_visible[42:])
-                n += 1.0
+            init_visible = train_data[datapoint_index]
+            init_hidden = self.sampler.sample_hidden(self, init_visible)
             
-            print("epoch: " + str(epoch) + " loss: " + str(error/n))
+            curr_visible = self.sampler.sample_visible(self, init_hidden)
+            curr_hidden = self.sampler.sample_hidden(self, curr_visible)
+
+            # Update weights
+            self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
+
+            # Update visible bias
+            self.update_visible_bias(init_visible, curr_visible, learning_rate)
+
+            # Update hidden bias
+            self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
+
+            error = self.error(init_visible[42:], curr_visible[42:])            
+            print("epoch: " + str(epoch) + " loss: " + str(error))
         return
     
     def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
@@ -177,15 +174,13 @@ class AttentionRBM:
         """
         # Testing the RBM Model
         error = 0
-        n = 0.
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
             hidden = self.sampler.sample_hidden(self, visible)
             visible = self.sampler.sample_visible(self, hidden)
             error += self.error(visible_answer, visible[42:])
-            n += 1.
-        print("test loss: " + str(error/n))
+        print("test loss: " + str(error/len(test_data)))
         return
     
     def allocate_attention(self, visible_layer):
