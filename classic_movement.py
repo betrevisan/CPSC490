@@ -4,12 +4,13 @@ using a restricted boltzmann machine.
 """
 
 from data import movement_data
-from rbms import sampler, movement_rbm
+from rbms import movement_rbm
+from samplers import classic_sampler
 
 TRAIN_SIZE = 100
 TEST_SIZE = 30
-WIDTH = HEIGHT = 100
 MAX_SPEED = 5
+WIDTH = HEIGHT = 100
 EPOCHS = 20
 LEARNING_RATE = 0.1
 
@@ -19,7 +20,7 @@ def main():
     dataset = movement_data.MovementData(TRAIN_SIZE, TEST_SIZE, MAX_SPEED, WIDTH, HEIGHT)
 
     # Initialize the RBM sampler 
-    rbm_sampler = sampler.SamplerRBM()
+    rbm_sampler = classic_sampler.SamplerRBM()
 
     # Define visible and hidden dimensions of the RBM
     visible_dim = len(dataset.train_data_bin[0])

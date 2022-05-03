@@ -4,7 +4,8 @@ computing using a restricted boltzmann machine.
 """
 
 from data import attention_data
-from rbms import sampler, attention_rbm
+from rbms import attention_rbm
+from samplers import classic_sampler
 
 TRAIN_SIZE = 100
 TEST_SIZE = 30
@@ -18,7 +19,7 @@ def main():
     dataset = attention_data.AttentionData(TRAIN_SIZE, TEST_SIZE, WIDTH, HEIGHT)
 
     # Initialize the RBM sampler 
-    rbm_sampler = sampler.SamplerRBM()
+    rbm_sampler = classic_sampler.SamplerRBM()
 
     # Define visible and hidden dimensions of the RBM
     visible_dim = len(dataset.train_data_bin[0])
