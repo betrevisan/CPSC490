@@ -80,7 +80,6 @@ class AttentionRBM:
         # Repeat for each epoch
         for epoch in range(epochs):
             datapoint_index = random.randrange(0, len(train_data))
-            print("index: " + str(datapoint_index))
 
             init_visible = train_data[datapoint_index]
             init_hidden = self.sampler.sample_hidden(self, init_visible)
