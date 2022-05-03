@@ -41,7 +41,7 @@ class RBM:
     get_allocations_from_binary(binary)
         Get the allocations for the prey, agent, and predator in decimal numbers given
         the binary numbers.
-    get_movement_from_binary(self, binary)
+    get_location_from_binary(self, binary)
         Get the direction of movement in decimal numbers given the binary numbers.
     error(answer, prediction)
         Get the error given the actual answer and the model's prediction.
@@ -201,7 +201,7 @@ class RBM:
         """
         reconstruction = self.reconstruct(visible_layer)
         loc_bin = reconstruction[63:]
-        loc = self.get_loc_from_binary(loc_bin)
+        loc = self.get_location_from_binary(loc_bin)
         return loc
 
     def reconstruct(self, visible_layer):
@@ -239,7 +239,7 @@ class RBM:
         predator = int("".join(str(b) for b in predator_binary), 2)
         return [prey, agent, predator]
     
-    def get_loc_from_binary(self, binary):
+    def get_location_from_binary(self, binary):
         """Get the location in decimal numbers given the binary numbers.
         Parameters
         ----------
@@ -291,7 +291,7 @@ class RBM:
         print("Error: " + str(error))
         print("Ideal allocations: " + str(self.get_allocations_from_binary(example_answer[:21])))
         print("The model's allocations: " + str(self.get_allocations_from_binary(reconstruction[42:63])))
-        print("Ideal movement location: " + str(self.get_loc_from_binary(example_answer[21:])))
-        print("The model's movement location: " + str(self.get_loc_from_binary(reconstruction[63:])))
+        print("Ideal movement location: " + str(self.get_location_from_binary(example_answer[21:])))
+        print("The model's movement location: " + str(self.get_location_from_binary(reconstruction[63:])))
         return
     
