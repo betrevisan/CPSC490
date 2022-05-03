@@ -10,8 +10,8 @@ TRAIN_SIZE = 100
 TEST_SIZE = 30
 WIDTH = HEIGHT = 100
 MAX_SPEED = 5
-# EPOCHS = 20
-# LEARNING_RATE = 0.1
+EPOCHS = 20
+LEARNING_RATE = 0.1
 
 def main():
     # Generate a data for training and testing given the width and the height of the 
@@ -28,11 +28,11 @@ def main():
     # Initialize the RBM given the sampler and the dimensions
     rbm_model = rbm.RBM(rbm_sampler, visible_dim, hidden_dim)
 
-#     # Train the RBM for a given number of epochs with a given learning rate
-#     rbm.train(dataset.test_data_bin, EPOCHS, 0.1)
+    # Train the RBM for a given number of epochs with a given learning rate
+    rbm_model.train(dataset.test_data_bin, EPOCHS, 0.1)
 
-#     # Test the RBM
-#     rbm.test(dataset.test_data_bin, dataset.test_data_bin_answers)
+    # Test the RBM
+    rbm_model.test(dataset.test_data_bin, dataset.test_data_bin_answers)
 
 #     # Run an example
 #     rbm.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
