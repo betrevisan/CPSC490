@@ -204,6 +204,17 @@ class RBM:
         loc = self.get_location_from_binary(loc_bin)
         return loc
 
+    def move_locs(self, prey_loc, agent_loc, predator_loc):
+        locs = [prey_loc, agent_loc, predator_loc]
+        input_layer = []
+        for i in range(len(locs)):
+            bin = []
+            for j in range(2):
+                if locs[i][j] >= 0:
+                    bin.append([int(b) for b in list('{0:07b}'.format(int(locs[i][j])))])
+            input_layer.append(np.concatenate(np.array(bin)))
+        return self.move(np.array(input_layer))
+
     def reconstruct(self, visible_layer):
         """Get the reconstruction of the visible layer given its initial layer.
         Parameters
