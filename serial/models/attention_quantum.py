@@ -18,7 +18,7 @@ def dist(p1, p2):
     """
     return math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
 
-class AttentionModel:
+class AttentionModelQuantum:
     """
     The AttentionModel class represents the quantum model for attention alloc.
     ...
@@ -211,4 +211,3 @@ class AttentionModel:
         agent.track_attn([attn_agent, attn_prey, attn_predator])
 
         return [attn_agent, attn_prey, attn_predator]
-        

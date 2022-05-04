@@ -2,7 +2,7 @@ import math
 import numpy as np
 from dwave.system import EmbeddingComposite, DWaveSampler
 
-class MovementModel:
+class MovementModelQuantum:
     """
     The MovementModel class represents the quantum model for movement.
     ...
