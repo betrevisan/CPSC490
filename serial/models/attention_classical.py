@@ -1,5 +1,21 @@
 import math
 
+# Helper functions
+def dist(p1, p2):
+    """Computes the distance between two points.
+    Parameters
+    ----------
+    p1 : List
+        Coordinates of point #1 as [x, y]
+    p2 : List
+        Coordinates of point #2 as [x, y]
+    Returns
+    -------
+    float
+        The distance between p1 and p2
+    """
+    return math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
+    
 class AttentionModelClassical:
     """
     The class AttentionModelClassical class represents the classical model for attention alloc.
@@ -103,8 +119,8 @@ class AttentionModelClassical:
         if agent is None or prey is None or predator is None:
             raise ValueError("all character must be passed to the function")
 
-        dist2prey = math.dist(agent.loc, prey.loc)
-        dist2predator = math.dist(agent.loc, predator.loc)
+        dist2prey = dist(agent.loc, prey.loc)
+        dist2predator = dist(agent.loc, predator.loc)
         avg_dist = (dist2prey + dist2predator)/2
 
         # Agent's attention level using the average between its distance to the
