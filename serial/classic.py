@@ -6,6 +6,7 @@ and decide on optimal movement direction).
 
 import math
 import time
+  
 # from metrics import metrics as metrics_mod
 from models import attention_classical as attention_mod
 from models import movement_classical as movement_mod
@@ -34,7 +35,7 @@ def main():
     attention_model = attention_mod.AttentionModelClassical(WIDTH, HEIGHT)
 
     # Initialize the movement model
-    movement_model = movement_mod.??
+    movement_model = movement_mod.MovementModelClassical(WIDTH, HEIGHT)
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
@@ -57,13 +58,11 @@ def main():
 
         # Pass the perceived locations to the movement model and get the location the
         # agent should move to
-        ???
+        movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
+                            prey.loc, predator.loc, MAX_SPEED)
 
         # Move Agent
         # start_movement_time = time.time()
-        # Pass the location the agent should move to
-        # TODO update the agent move function
-        agent.move()
         # metrics.movement_time += (time.time() - start_movement_time) * 1000000 
 
     # # Add general metrics
@@ -97,6 +96,8 @@ def main():
     # metrics.total_time = (time.time() - start_time) * 1000000
 
     # return metrics
+    print(agent)
+    return
 
 if __name__ == "__main__":
     main()
