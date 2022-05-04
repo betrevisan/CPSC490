@@ -2,6 +2,22 @@ import math
 import numpy as np
 from random import randint, seed
 
+# Helper functions
+def dist(p1, p2):
+    """Computes the distance between two points.
+    Parameters
+    ----------
+    p1 : List
+        Coordinates of point #1 as [x, y]
+    p2 : List
+        Coordinates of point #2 as [x, y]
+    Returns
+    -------
+    float
+        The distance between p1 and p2
+    """
+    return math.sqrt(((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2))
+
 class Agent:
     """
     The Agent class represents the agent in the Predator-Prey task.
@@ -176,7 +192,7 @@ class Agent:
         self.loc_trace.append(list(self.loc))
 
         # Keep track of distances
-        self.track_dist([math.dist(prey_real, self.loc), math.dist(predator_real, self.loc)])
+        self.track_dist([dist(prey_real, self.loc), dist(predator_real, self.loc)])
 
     def bounce_back(self):
         """If the location is out of range, bounces it back into range
