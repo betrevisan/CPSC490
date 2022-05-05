@@ -93,19 +93,22 @@ class RBM:
             
             init_visible = train_data[datapoint_index]
             init_hidden, timing = self.sampler.sample_hidden(self, init_visible)
-            sampling_time += timing["qpu_sampling_time"]
-            anneal_time += timing["qpu_anneal_time_per_sample"]
-            readout_time += timing["qpu_readout_time_per_sample"]
+            if timing != -1:
+                sampling_time += timing["qpu_sampling_time"]
+                anneal_time += timing["qpu_anneal_time_per_sample"]
+                readout_time += timing["qpu_readout_time_per_sample"]
 
             curr_visible, timing = self.sampler.sample_visible(self, init_hidden)
-            sampling_time += timing["qpu_sampling_time"]
-            anneal_time += timing["qpu_anneal_time_per_sample"]
-            readout_time += timing["qpu_readout_time_per_sample"]
+            if timing != -1:
+                sampling_time += timing["qpu_sampling_time"]
+                anneal_time += timing["qpu_anneal_time_per_sample"]
+                readout_time += timing["qpu_readout_time_per_sample"]
 
             curr_hidden, timing = self.sampler.sample_hidden(self, curr_visible)
-            sampling_time += timing["qpu_sampling_time"]
-            anneal_time += timing["qpu_anneal_time_per_sample"]
-            readout_time += timing["qpu_readout_time_per_sample"]
+            if timing != -1:
+                sampling_time += timing["qpu_sampling_time"]
+                anneal_time += timing["qpu_anneal_time_per_sample"]
+                readout_time += timing["qpu_readout_time_per_sample"]
 
             # Update weights
             self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
@@ -197,8 +200,8 @@ class RBM:
         for i in range(len(test_data)):
             visible = test_data[i]
             visible_answer = test_answers[i]
-            hidden = self.sampler.sample_hidden(self, visible)
-            visible = self.sampler.sample_visible(self, hidden)
+            hidden, _ = self.sampler.sample_hidden(self, visible)
+            visible, _ = self.sampler.sample_visible(self, hidden)
             error += self.error(visible_answer, visible[42:])
         print("test loss: " + str(error/len(test_data)))
         return
@@ -255,14 +258,16 @@ class RBM:
             The reconstructed visible layer
         """
         hidden_layer, timing = self.sampler.sample_hidden(self, visible_layer)
-        self.sampling_time += timing["qpu_sampling_time"]
-        self.anneal_time += timing["qpu_anneal_time_per_sample"]
-        self.readout_time += timing["qpu_readout_time_per_sample"]
+        if timing != -1:
+            self.sampling_time += timing["qpu_sampling_time"]
+            self.anneal_time += timing["qpu_anneal_time_per_sample"]
+            self.readout_time += timing["qpu_readout_time_per_sample"]
 
         reconstruction, timing = self.sampler.sample_visible(self, hidden_layer)
-        self.sampling_time += timing["qpu_sampling_time"]
-        self.anneal_time += timing["qpu_anneal_time_per_sample"]
-        self.readout_time += timing["qpu_readout_time_per_sample"]
+        if timing != -1:
+            self.sampling_time += timing["qpu_sampling_time"]
+            self.anneal_time += timing["qpu_anneal_time_per_sample"]
+            self.readout_time += timing["qpu_readout_time_per_sample"]
 
         return reconstruction
     
@@ -332,8 +337,8 @@ class RBM:
         None
         """
         error = 0
-        hidden = self.sampler.sample_hidden(self, example)
-        reconstruction = self.sampler.sample_visible(self, hidden)
+        hidden, _ = self.sampler.sample_hidden(self, example)
+        reconstruction, _ = self.sampler.sample_visible(self, hidden)
         error = self.error(example_answer, reconstruction[42:])
         print("Error: " + str(error))
         print("Ideal allocations: " + str(self.get_allocations_from_binary(example_answer[:21])))

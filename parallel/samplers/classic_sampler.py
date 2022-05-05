@@ -56,7 +56,7 @@ class SamplerRBM:
         activation = weighted_input + model.visible_bias
         prob_v_given_h = sigmoid(activation)
         visible_layer = self.layer_given_prob(prob_v_given_h)
-        return visible_layer
+        return visible_layer, -1
     
     def sample_hidden(self, model, visible_input):
         """Samples the hidden layer of the model given the input from the visible layer.
@@ -75,7 +75,7 @@ class SamplerRBM:
         activation = weighted_input + model.hidden_bias
         prob_h_given_v = sigmoid(activation)
         hidden_layer = self.layer_given_prob(prob_h_given_v)
-        return hidden_layer
+        return hidden_layer, -1
     
     def layer_given_prob(self, prob):
         """Get the layer within the model given its probability distribution.
