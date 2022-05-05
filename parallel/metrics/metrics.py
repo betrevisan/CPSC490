@@ -30,6 +30,12 @@ class Metrics:
         self.learning_rate = 0
         self.training_size = 0
         self.test_size = 0
+        self.train_sampling_time = 0
+        self.train_anneal_time = 0
+        self.train_readout_time = 0
+        self.decision_sampling_time = 0
+        self.decision_anneal_time = 0
+        self.decision_readout_time = 0
         self.decision_time = 0
         self.total_sampling_time_attn = 0
         self.total_anneal_time_attn = 0
@@ -73,8 +79,16 @@ class Metrics:
         display.append('\nTime Metrics (in microseconds)')
         if self.training_time > 0:
             display.append("\t\tTraining time:                            " + "{:.2f}".format(self.training_time))
+        if self.train_sampling_time > 0:
+            display.append("\t\tTraining sampling time:                            " + "{:.2f}".format(self.train_sampling_time))
+            display.append("\t\tTraining anneal time:                            " + "{:.2f}".format(self.train_anneal_time))
+            display.append("\t\tTraining readout time:                            " + "{:.2f}".format(self.train_readout_time))
         if self.decision_time > 0:
             display.append("\t\tAverage Decision time:                            " + "{:.2f}".format(self.decision_time/self.iterations))
+        if self.decision_sampling_time > 0:
+            display.append("\t\tDecision sampling time:                            " + "{:.2f}".format(self.decision_sampling_time))
+            display.append("\t\tDecision anneal time:                            " + "{:.2f}".format(self.decision_anneal_time))
+            display.append("\t\tDecision readout time:                            " + "{:.2f}".format(self.decision_readout_time))
         if self.total_sampling_time_attn > 0:
             display.append("\t\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
             display.append("\t\tAttention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))

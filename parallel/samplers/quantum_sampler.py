@@ -68,9 +68,10 @@ class SamplerQRBM:
         # CONFIRM NUM_READS
         # Sample BQM
         sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
+        timing = sampler_output.info["timing"]
         sampler_output = sampler_output.first.sample
         
-        return self.layer_given_sampler_output(sampler_output)
+        return self.layer_given_sampler_output(sampler_output), timing
     
     def sample_hidden(self, model, visible_input):
         """Samples the hidden layer of the model given the input from the visible layer.
@@ -116,9 +117,10 @@ class SamplerQRBM:
         # CONFIRM NUM_READS
         # Sample BQM
         sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
+        timing = sampler_output.info["timing"]
         sampler_output = sampler_output.first.sample
 
-        return self.layer_given_sampler_output(sampler_output)
+        return self.layer_given_sampler_output(sampler_output), timing
     
     def layer_given_sampler_output(self, sampler_output):
         """Get the layer within the model given the output from the quantum sampler.

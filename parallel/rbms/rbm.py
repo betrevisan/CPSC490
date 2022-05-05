@@ -65,6 +65,9 @@ class RBM:
         self.weights = np.random.randn(visible_dim, hidden_dim)
         self.visible_bias = np.random.randn(visible_dim)
         self.hidden_bias = np.random.randn(hidden_dim)
+        self.sampling_time = 0
+        self.anneal_time = 0
+        self.readout_time = 0
         return
 
     def train(self, train_data, epochs, learning_rate):
@@ -81,15 +84,28 @@ class RBM:
         -------
         None
         """
+        sampling_time = 0
+        anneal_time = 0
+        readout_time = 0
         # Repeat for each epoch
         for epoch in range(epochs):
             datapoint_index = random.randrange(0, len(train_data))
             
             init_visible = train_data[datapoint_index]
-            init_hidden = self.sampler.sample_hidden(self, init_visible)
+            init_hidden, timing = self.sampler.sample_hidden(self, init_visible)
+            sampling_time += timing["qpu_sampling_time"]
+            anneal_time += timing["qpu_anneal_time_per_sample"]
+            readout_time += timing["qpu_readout_time_per_sample"]
 
-            curr_visible = self.sampler.sample_visible(self, init_hidden)
-            curr_hidden = self.sampler.sample_hidden(self, curr_visible)
+            curr_visible, timing = self.sampler.sample_visible(self, init_hidden)
+            sampling_time += timing["qpu_sampling_time"]
+            anneal_time += timing["qpu_anneal_time_per_sample"]
+            readout_time += timing["qpu_readout_time_per_sample"]
+
+            curr_hidden, timing = self.sampler.sample_hidden(self, curr_visible)
+            sampling_time += timing["qpu_sampling_time"]
+            anneal_time += timing["qpu_anneal_time_per_sample"]
+            readout_time += timing["qpu_readout_time_per_sample"]
 
             # Update weights
             self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
@@ -102,7 +118,7 @@ class RBM:
 
             error = self.error(init_visible[42:], curr_visible[42:])            
             print("epoch: " + str(epoch) + " loss: " + str(error))
-        return
+        return [sampling_time, anneal_time/(3 * epochs), readout_time/(3 * epochs)]
 
     def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
         """Update the RBM's weights given the initial visible and hidden layers, the
@@ -205,6 +221,10 @@ class RBM:
         return loc
 
     def move_locs(self, agent, prey_loc, predator_loc, speed):
+        self.sampling_time = 0
+        self.anneal_time = 0
+        self.readout_time = 0
+
         locs = [prey_loc, agent.loc, predator_loc]
         input_layer = []
         for i in range(len(locs)):
@@ -221,7 +241,7 @@ class RBM:
         # Move the agent in the given direction
         agent.move(prey_loc, predator_loc, speed, move_dir)
 
-        return
+        return [self.sampling_time, self.anneal_time/2, self.readout_time/2]
 
     def reconstruct(self, visible_layer):
         """Get the reconstruction of the visible layer given its initial layer.
@@ -234,8 +254,16 @@ class RBM:
         np.Array
             The reconstructed visible layer
         """
-        hidden_layer = self.sampler.sample_hidden(self, visible_layer)
-        reconstruction = self.sampler.sample_visible(self, hidden_layer)
+        hidden_layer, timing = self.sampler.sample_hidden(self, visible_layer)
+        self.sampling_time += timing["qpu_sampling_time"]
+        self.anneal_time += timing["qpu_anneal_time_per_sample"]
+        self.readout_time += timing["qpu_readout_time_per_sample"]
+
+        reconstruction, timing = self.sampler.sample_visible(self, hidden_layer)
+        self.sampling_time += timing["qpu_sampling_time"]
+        self.anneal_time += timing["qpu_anneal_time_per_sample"]
+        self.readout_time += timing["qpu_readout_time_per_sample"]
+
         return reconstruction
     
     def get_allocations_from_binary(self, binary):
