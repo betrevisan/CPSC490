@@ -18,7 +18,7 @@ MAX_SPEED = 5
 WIDTH = HEIGHT = 100
 EPOCHS = 20
 LEARNING_RATE = 0.1
-ITERATIONS = 35 # Number of iterations in the game
+ITERATIONS = 12 # Number of iterations in the game
 
 def main():
     # Initialize metrics instance
@@ -57,6 +57,11 @@ def main():
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
+
+        # Prey avoids agent
+        prey.avoid(agent.loc, MAX_SPEED)
+        # Predator pursues agent
+        predator.pursue(agent.loc, MAX_SPEED)
 
         # Start the movement timer
         decision_start_time = time.time() * 1000000
