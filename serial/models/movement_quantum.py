@@ -187,4 +187,4 @@ class MovementModelQuantum:
         # Move the agent in the given direction
         agent.move(agent_perceived, prey_perceived, predator_perceived, prey_real, predator_real, speed, move_dir)
 
-        return self.total_time
+        return
