@@ -64,7 +64,7 @@ class Metrics:
             display.append("\t\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
         if self.total_sampling_time_attn > 0:
             display.append("\t\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
-            display.append("\t\Attention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
+            display.append("\t\tAttention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
             display.append("\t\tAttention readout time:                            " + "{:.2f}".format(self.total_readout_time_attn/self.iterations))
             display.append("\t\tMovement sampling time:                             " + "{:.2f}".format(self.total_sampling_time_move/self.iterations))
             display.append("\t\tMovement anneal time:                            " + "{:.2f}".format(self.total_anneal_time_move/self.iterations))
