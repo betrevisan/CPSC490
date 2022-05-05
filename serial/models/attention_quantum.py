@@ -64,7 +64,9 @@ class AttentionModelQuantum:
         self.h = h
         self.max_dist = sqrt(w**2 + h**2)
         self.num_reads = num_reads
-        self.total_time = 0
+        self.sampling_time = 0
+        self.anneal_time = 0
+        self.readout_time = 0
         self.name = name
     
     def qubo(self, dist):
@@ -149,7 +151,11 @@ class AttentionModelQuantum:
 
         # Time statistics in microseconds
         sampling_time = sampler_output.info["timing"]["qpu_sampling_time"]
-        self.total_time += sampling_time
+        anneal_time = sampler_output.info["timing"]["qpu_anneal_time_per_sample"]
+        readout_time = sampler_output.info["timing"]["qpu_readout_time_per_sample"]
+        self.sampling_time += sampling_time
+        self.anneal_time += anneal_time
+        self.readout_time += readout_time
 
         # Get the attention
         attn = sampler_output.record.sample[0]
@@ -210,4 +216,4 @@ class AttentionModelQuantum:
         # Keep track of attention levels
         agent.track_attn([attn_agent, attn_prey, attn_predator])
 
-        return [attn_agent, attn_prey, attn_predator, self.total_time]
+        return [attn_agent, attn_prey, attn_predator]

@@ -35,11 +35,9 @@ def main():
     # Run model for n iterations
     for _ in range(ITERATIONS):
 
-        attn_agent, attn_prey, attn_predator, attn_time = attention_model.get_attention_levels(agent,
-                                                                                prey,
-                                                                                predator)
-        # Record time elapsed during attention allocation
-        metrics.attention_time += attn_time
+        attn_agent, attn_prey, attn_predator = attention_model.get_attention_levels(agent,
+                                                                                    prey,
+                                                                                    predator)
         
         # Prey avoids agent
         prey.avoid(agent.loc, MAX_SPEED)
@@ -51,10 +49,8 @@ def main():
         prey_perceived = agent.perceive(prey, attn_prey)
         predator_perceived = agent.perceive(predator, attn_predator)
 
-        movement_time = movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
-                                            prey.loc, predator.loc, MAX_SPEED)
-        # Record time elapsed during movement
-        metrics.movement_time += movement_time
+        movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
+                            prey.loc, predator.loc, MAX_SPEED)
 
     # Add general metrics
     metrics.w = WIDTH
@@ -83,8 +79,16 @@ def main():
     # Add attention trace to metrics
     metrics.attention_trace = agent.attn_trace
 
+    # Add time metrics
+    metrics.total_sampling_time_attn = attention_model.sampling_time
+    metrics.total_anneal_time_attn = attention_model.anneal_time
+    metrics.total_readout_time_attn = attention_model.readout_time
+    metrics.total_sampling_time_move = movement_model.sampling_time
+    metrics.total_anneal_time_move = movement_model.anneal_time
+    metrics.total_readout_time_move = movement_model.readout_time
+
     print(metrics)
-    
+
     return
 
 if __name__ == "__main__":

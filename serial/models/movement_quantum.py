@@ -48,7 +48,9 @@ class MovementModelQuantum:
         self.h = h
         self.max_dist = np.sqrt(w**2 + h**2)
         self.num_reads = num_reads
-        self.total_time = 0
+        self.sampling_time = 0
+        self.anneal_time = 0
+        self.readout_time = 0
         self.name = name
 
     def qubo(self, dist2prey, dist2predator):
@@ -141,7 +143,11 @@ class MovementModelQuantum:
 
         # Time statistics in microseconds
         sampling_time = sampler_output.info["timing"]["qpu_sampling_time"]
-        self.total_time += sampling_time
+        anneal_time = sampler_output.info["timing"]["qpu_anneal_time_per_sample"]
+        readout_time = sampler_output.info["timing"]["qpu_readout_time_per_sample"]
+        self.sampling_time += sampling_time
+        self.anneal_time += anneal_time
+        self.readout_time += readout_time
 
         # Get the movement direction
         move_dir_idx = sampler_output.record.sample[0]

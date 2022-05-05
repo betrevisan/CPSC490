@@ -26,6 +26,12 @@ class Metrics:
         self.num_reads = -1
         self.attention_time = 0
         self.movement_time = 0
+        self.total_sampling_time_attn = 0
+        self.total_anneal_time_attn = 0
+        self.total_readout_time_attn = 0
+        self.total_sampling_time_move = 0
+        self.total_anneal_time_move = 0
+        self.total_readout_time_move = 0
         self.attention_trace = []
         self.agent_alive = True
         self.agent_feasted = False
@@ -53,8 +59,17 @@ class Metrics:
             display.append("\tAnnealer reads per iteration:                      " + str(self.num_reads))
 
         display.append('\nTime Metrics (in microseconds)')
-        display.append("\t\tAverage Attention time:                            " + "{:.2f}".format(self.attention_time/self.iterations))
-        display.append("\t\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
+        if self.attention_time > 0:
+            display.append("\t\tAverage Attention time:                            " + "{:.2f}".format(self.attention_time/self.iterations))
+            display.append("\t\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
+        if self.total_sampling_time_attn > 0:
+            display.append("\t\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
+            display.append("\t\Attention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
+            display.append("\t\tAttention readout time:                            " + "{:.2f}".format(self.total_readout_time_attn/self.iterations))
+            display.append("\t\tMovement sampling time:                             " + "{:.2f}".format(self.total_sampling_time_move/self.iterations))
+            display.append("\t\tMovement anneal time:                            " + "{:.2f}".format(self.total_anneal_time_move/self.iterations))
+            display.append("\t\tMovement readout time:                             " + "{:.2f}".format(self.total_readout_time_move/self.iterations))
+
 
         display.append('\nAttention Allocation Metrics')
         trace_str = "\tTrace:                                             "
