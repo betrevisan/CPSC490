@@ -6,6 +6,9 @@ quantum deep restricted boltzmann machine sampled with quantum annealing.
 from data import data
 from rbms import rbm
 from samplers import quantum_sampler
+from characters import agent as agent_mod
+from characters import predator as predator_mod
+from characters import prey as prey_mod
 
 TRAIN_SIZE = 100
 TEST_SIZE = 30
@@ -13,6 +16,7 @@ MAX_SPEED = 5
 WIDTH = HEIGHT = 100
 EPOCHS = 20
 LEARNING_RATE = 0.1
+ITERATIONS = 1 # Number of iterations in the game
 
 def main():
     # Generate a data for training and testing given the width and the height of the 
@@ -38,6 +42,17 @@ def main():
     # Run an example
     rbm_model.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
 
+    agent = agent_mod.Agent(WIDTH, HEIGHT)
+    prey = prey_mod.Prey(WIDTH, HEIGHT)
+    predator = predator_mod.Predator(WIDTH, HEIGHT)
+
+    # Run model for n iterations
+    for _ in range(ITERATIONS):
+
+        # Moves the agent according to the boltzmann
+        rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
+
+    print(agent)
     return
 
 if __name__ == "__main__":
