@@ -108,18 +108,11 @@ class Agent:
         y = target.loc[1] + blur
         return [x, y]
 
-    def move(self, agent_perceived, prey_perceived, predator_perceived,
-                prey_real, predator_real, speed, target):
+    def move(self, prey_real, predator_real, speed, target):
         """Move the agent using the perceived locations, speed of movement, and the target
         direction.
         Parameters
         ----------
-        agent_perceived : [float]
-            The agent's perceived location [x, y]
-        prey_perceived : [float]
-            The prey's perceived location [x, y]
-        predator_perceived : [float]
-            The predator's perceived location [x, y]
         prey_real : [float]
             The prey's real location [x, y]
         predator_real : [float]
@@ -137,23 +130,16 @@ class Agent:
             If given arguments are invalid.
         """
 
-        if agent_perceived is None or prey_perceived is None or predator_perceived is None or prey_real is None or predator_real is None or target is None:
+        if prey_real is None or predator_real is None or target is None:
             raise ValueError("locations must all be valid")
 
         if speed <= 0:
             raise ValueError("speed must be positive number")
 
-        # Track perceived locations
-        self.perceived_agent_trace.append(list(agent_perceived))
-        self.perceived_prey_trace.append(list(prey_perceived))
-        self.perceived_predator_trace.append(list(predator_perceived))
-
         # If the distance between prey and predator is less than 10 it counts as a contact
         buffer = 10
         # Vector for the agent's real location
         agent_real_v = np.array(self.loc)
-        # Vector for the agent's perceived location
-        agent_perceived_v = np.array(agent_perceived)
         # Vector for the prey's real location
         prey_real_v = np.array(prey_real)
         # Vector for the predator's real location
@@ -168,7 +154,7 @@ class Agent:
             self.alive = False
 
         # Vector for the direction of movement
-        move_v =  target_v - agent_perceived_v
+        move_v =  target_v - agent_real_v
 
         # Move agent alongside movement vector at a given speed
         d = speed / np.linalg.norm(move_v)

@@ -49,12 +49,10 @@ def main():
     # Run model for n iterations
     for _ in range(ITERATIONS):
 
-        # Get the real locations as the binary visible layer that will be
-        # used as the input
-        move_dir = rbm_model.move_locs(prey.loc, agent.loc, predator.loc)
+        # Moves the agent according to the boltzmann
+        rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
 
-        # TODO make the agent move in this direction
-
+    print(agent)
     return
 
 

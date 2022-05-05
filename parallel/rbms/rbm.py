@@ -199,13 +199,15 @@ class RBM:
         List
             The location the agent should move to
         """
+        print(visible_layer)
+        print(visible_layer.shape)
         reconstruction = self.reconstruct(visible_layer)
         loc_bin = reconstruction[63:]
         loc = self.get_location_from_binary(loc_bin)
         return loc
 
-    def move_locs(self, prey_loc, agent_loc, predator_loc):
-        locs = [prey_loc, agent_loc, predator_loc]
+    def move_locs(self, agent, prey_loc, predator_loc, speed):
+        locs = [prey_loc, agent.loc, predator_loc]
         input_layer = []
         for i in range(len(locs)):
             bin = []
@@ -213,7 +215,15 @@ class RBM:
                 if locs[i][j] >= 0:
                     bin.append([int(b) for b in list('{0:07b}'.format(int(locs[i][j])))])
             input_layer.append(np.concatenate(np.array(bin)))
-        return self.move(np.array(input_layer))
+        
+        input_layer.append(np.zeros(35))
+
+        move_dir = self.move(np.concatenate(input_layer))
+
+        # Move the agent in the given direction
+        agent.move(prey_loc, predator_loc, speed, move_dir)
+
+        return
 
     def reconstruct(self, visible_layer):
         """Get the reconstruction of the visible layer given its initial layer.
