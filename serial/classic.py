@@ -59,7 +59,7 @@ def main():
         # determined by it
         movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
                             prey.loc, predator.loc, MAX_SPEED)
-        # Record time elapsed during attention
+        # Record time elapsed during movement
         metrics.movement_time += (time.time() * 1000000 - movement_start_time)
 
     # Add general metrics

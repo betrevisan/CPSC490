@@ -139,9 +139,9 @@ class MovementModelQuantum:
         # Run sampler
         sampler_output = sampler.sample_qubo(Q, num_reads = self.num_reads)
 
-        # # Time statistics in microseconds
-        # sampling_time = sampler_output.info["timing"]["qpu_sampling_time"]
-        # self.total_time += sampling_time
+        # Time statistics in microseconds
+        sampling_time = sampler_output.info["timing"]["qpu_sampling_time"]
+        self.total_time += sampling_time
 
         # Get the movement direction
         move_dir_idx = sampler_output.record.sample[0]
@@ -180,3 +180,5 @@ class MovementModelQuantum:
 
         # Move the agent in the given direction
         agent.move(agent_perceived, prey_perceived, predator_perceived, prey_real, predator_real, speed, move_dir)
+
+        return self.total_time

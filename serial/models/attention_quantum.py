@@ -32,7 +32,7 @@ class AttentionModelQuantum:
         Maximum possible distance in the coordinate plane
     num_reads : int
         Number of reads in the annealer
-    total_time : floar
+    total_time : float
         Total sampling time for this model
     name : str, optional
         The name of the model
@@ -210,4 +210,4 @@ class AttentionModelQuantum:
         # Keep track of attention levels
         agent.track_attn([attn_agent, attn_prey, attn_predator])
 
-        return [attn_agent, attn_prey, attn_predator]
+        return [attn_agent, attn_prey, attn_predator, self.total_time]
