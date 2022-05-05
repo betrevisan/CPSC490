@@ -24,10 +24,8 @@ class Metrics:
         self.h = 0
         self.iterations = 0
         self.num_reads = -1
-        self.bias = -1
         self.attention_time = 0
         self.movement_time = 0
-        self.total_time = 0
         self.attention_trace = []
         self.agent_alive = True
         self.agent_feasted = False
@@ -53,13 +51,10 @@ class Metrics:
         display.append("\tIterations:                                        " + str(self.iterations))
         if self.num_reads != -1:
             display.append("\tAnnealer reads per iteration:                      " + str(self.num_reads))
-        if self.bias != -1:
-            display.append("\tPursuit bias:                                      " + str(self.bias))
 
-        display.append('\nTime Metrics')
-        display.append("\tTotal time (in microseconds):                      " + "{:.2f}".format(self.total_time))      
-        display.append("\t\tAttention time:                            " + "{:.2f}".format(self.attention_time))
-        display.append("\t\tMovement time:                             " + "{:.2f}".format(self.movement_time))
+        display.append('\nTime Metrics (in microseconds)')
+        display.append("\t\tAverage Attention time:                            " + "{:.2f}".format(self.attention_time/self.iterations))
+        display.append("\t\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
 
         display.append('\nAttention Allocation Metrics')
         trace_str = "\tTrace:                                             "

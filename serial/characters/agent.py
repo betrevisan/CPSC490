@@ -69,7 +69,7 @@ class Agent:
         h : int
             Height of the coordinate plane
         """
-        seed(1)
+        seed(11)
         self.loc = [randint(int(w/3), int(2*w/3)), randint(0, h)]
         self.feasted = False
         self.alive = True

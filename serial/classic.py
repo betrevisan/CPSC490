@@ -4,27 +4,21 @@ serial approach (i.e. at each time step, allocate attention, observe locations,
 and decide on optimal movement direction).
 """
 
-import math
 import time
-  
-# from metrics import metrics as metrics_mod
 from models import attention_classical as attention_mod
 from models import movement_classical as movement_mod
 from characters import agent as agent_mod
 from characters import predator as predator_mod
 from characters import prey as prey_mod
+from metrics import metrics as metrics_mod
 
-ITERATIONS = 1 # Number of iterations in the game
+ITERATIONS = 17 # Number of iterations in the game
 WIDTH = HEIGHT = 100
 MAX_SPEED = 5
-BIAS = 0.8 # Bias on pursuing over avoiding for the agent's movement
         
 def main():
-    # # Initialize metrics instance
-    # metrics = metrics_mod.Metrics("Serial Classical Implementation")
-
-    # # Compute time stats
-    # start_time = time.time()
+    # Initialize metrics instance
+    metrics = metrics_mod.Metrics("Serial Classical Implementation")
 
     # Initialize characters
     agent = agent_mod.Agent(WIDTH, HEIGHT)
@@ -40,11 +34,14 @@ def main():
     # Run model for n iterations
     for _ in range(ITERATIONS):
 
-        # start_attn_time = time.time()
+        # Start the attention timer (must be adjusted from seconds to microseconds)
+        attn_start_time = time.time() * 1000000
+        # Allocate attention given the real locations of the characters
         attn_agent, attn_prey, attn_predator = attention_model.get_attention_levels(agent,
                                                                                     prey,
                                                                                     predator)
-        # metrics.attention_time += (time.time() - start_attn_time) * 1000000
+        # Record time elapsed during attention allocation
+        metrics.attention_time += (time.time() * 1000000 - attn_start_time)
 
         # Prey avoids agent
         prey.avoid(agent.loc, MAX_SPEED)
@@ -56,47 +53,44 @@ def main():
         prey_perceived = agent.perceive(prey, attn_prey)
         predator_perceived = agent.perceive(predator, attn_predator)
 
-        # Pass the perceived locations to the movement model and get the location the
-        # agent should move to
+        # Start the movement timer
+        movement_start_time = time.time() * 1000000
+        # Pass the perceived locations to the movement model and move to the location
+        # determined by it
         movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
                             prey.loc, predator.loc, MAX_SPEED)
+        # Record time elapsed during attention
+        metrics.movement_time += (time.time() * 1000000 - movement_start_time)
 
-        # Move Agent
-        # start_movement_time = time.time()
-        # metrics.movement_time += (time.time() - start_movement_time) * 1000000 
+    # Add general metrics
+    metrics.w = WIDTH
+    metrics.h = HEIGHT
+    metrics.iterations = ITERATIONS
 
-    # # Add general metrics
-    # metrics.w = WIDTH
-    # metrics.h = HEIGHT
-    # metrics.iterations = ITERATIONS
-    # metrics.bias = BIAS
+    # Add agent to metrics
+    metrics.agent_alive = agent.alive
+    metrics.agent_feasted = agent.feasted
+    metrics.agent_loc_trace = agent.loc_trace
+    metrics.agent_perceived_loc_trace = agent.perceived_agent_trace
+    metrics.prey_perceived_loc_trace = agent.perceived_prey_trace
+    metrics.predator_perceived_loc_trace = agent.perceived_predator_trace
+    metrics.dist_agent2prey_trace = [dist[0] for dist in agent.dist_trace]
+    metrics.dist_agent2predator_trace = [dist[1] for dist in agent.dist_trace]
 
-    # # Add agent to metrics
-    # metrics.agent_alive = agent.alive
-    # metrics.agent_feasted = agent.feasted
-    # metrics.agent_loc_trace = agent.loc_trace
-    # metrics.agent_perceived_loc_trace = agent.perceived_agent_trace
-    # metrics.prey_perceived_loc_trace = agent.perceived_prey_trace
-    # metrics.predator_perceived_loc_trace = agent.perceived_predator_trace
-    # metrics.dist_agent2prey_trace = [dist[0] for dist in agent.dist_trace]
-    # metrics.dist_agent2predator_trace = [dist[1] for dist in agent.dist_trace]
+    # Add prey to metrics
+    metrics.prey_alive = prey.alive
+    metrics.prey_loc_trace = prey.loc_trace
 
-    # # Add prey to metrics
-    # metrics.prey_alive = prey.alive
-    # metrics.prey_loc_trace = prey.loc_trace
+    # Add predator to metrics
+    metrics.predator_feasted = predator.feasted
+    metrics.predator_loc_trace = predator.loc_trace
 
-    # # Add predator to metrics
-    # metrics.predator_feasted = predator.feasted
-    # metrics.predator_loc_trace = predator.loc_trace
+    # Add attention trace to metrics
+    metrics.attention_trace = agent.attn_trace
 
-    # # Add attention trace to metrics
-    # metrics.attention_trace = agent.attn_trace
+    # Display metrics
+    print(metrics)
 
-    # # Add total time to metrics
-    # metrics.total_time = (time.time() - start_time) * 1000000
-
-    # return metrics
-    print(agent)
     return
 
 if __name__ == "__main__":
