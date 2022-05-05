@@ -199,8 +199,6 @@ class RBM:
         List
             The location the agent should move to
         """
-        print(visible_layer)
-        print(visible_layer.shape)
         reconstruction = self.reconstruct(visible_layer)
         loc_bin = reconstruction[63:]
         loc = self.get_location_from_binary(loc_bin)
