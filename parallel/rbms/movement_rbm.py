@@ -1,3 +1,6 @@
+# Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+# and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
+
 import numpy as np
 import random
 
@@ -56,7 +59,6 @@ class MovementRBM:
         hidden_dim : int
             Number of nodes in the hidden dimension of the RBM
         """
-
         self.sampler = sampler
         self.weights = np.random.randn(visible_dim, hidden_dim)
         self.visible_bias = np.random.randn(visible_dim)

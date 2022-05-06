@@ -84,7 +84,7 @@ class Agent:
         return
     
     def perceive(self, target, attention):
-        """Get the target's location given the attention level
+        """Get the target's location given the attention level.
         Parameters
         ----------
         target : Agent, Prey, or Predator
@@ -103,13 +103,14 @@ class Agent:
         if target is None or attention < 0:
             raise ValueError("invalid perceived arguments")
 
+        # Blur actual location given the allocated attention level
         blur = 100 - attention
         x = target.loc[0] + blur
         y = target.loc[1] + blur
         return [x, y]
 
     def move(self, prey_real, predator_real, speed, target):
-        """Move the agent using the perceived locations, speed of movement, and the target
+        """Move the agent using the perceived locations, speed of movement, and the target.
         direction.
         Parameters
         ----------
@@ -129,7 +130,6 @@ class Agent:
         ValueError
             If given arguments are invalid.
         """
-
         if prey_real is None or predator_real is None or target is None:
             raise ValueError("locations must all be valid")
 
@@ -181,7 +181,7 @@ class Agent:
         self.track_dist([dist(prey_real, self.loc), dist(predator_real, self.loc)])
 
     def bounce_back(self):
-        """If the location is out of range, bounces it back into range
+        """If the location is out of range, bounces it back into range.
         Parameters
         ----------
         void
@@ -202,7 +202,7 @@ class Agent:
             self.loc[1] = self.h - 1
         
     def track_attn(self, attention):
-        """Add attentions to the attention_trace
+        """Add attentions to the attention_trace.
         Parameters
         ----------
         attention : [float]
@@ -214,7 +214,7 @@ class Agent:
         self.attn_trace.append(attention)
 
     def track_dist(self, dist):
-        """ Add distances to the dist_trace
+        """ Add distances to the dist_trace.
         Parameters
         ----------
         dist : [float]
@@ -226,7 +226,7 @@ class Agent:
         self.dist_trace.append(dist)
 
     def __repr__(self):
-        """Displays information about the agent
+        """Displays information about the agent.
         """
         display = ['\n===============================']
         display.append('A G E N T')
@@ -285,3 +285,4 @@ class Agent:
 
         display.append('===============================\n')
         return "\n".join(display)
+    

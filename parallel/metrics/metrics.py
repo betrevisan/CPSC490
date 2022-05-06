@@ -1,15 +1,7 @@
 class Metrics:
-
     """
     The Metrics class carries several metrics corresponding to an implementation
     of the predator-prey task.
-    ...
-    Attributes
-    ----------
-    name : str
-        Name of the implementation
-    Methods
-    -------
     """
 
     def __init__(self, name):
@@ -164,3 +156,4 @@ class Metrics:
 
         display.append('===============================\n')
         return "\n".join(display)
+        

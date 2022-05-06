@@ -58,7 +58,6 @@ class Prey:
         ValueError
             If given arguments are invalid.
         """
-
         if agent_loc is None:
             raise ValueError("agent_loc must be valid")
 

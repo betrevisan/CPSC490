@@ -238,34 +238,46 @@ class RBM:
         Returns
         -------
         List
+            The list of attention allocations
+        List
             The location the agent should move to
         """
+        # Get the reconstruction for the given input
         reconstruction = self.reconstruct(visible_layer)
+
+        # Get the allocations from binary to decimal
         allocs_bin = reconstruction[42:63]
         allocs = self.get_allocations_from_binary(allocs_bin)
+
+        # Get the movement location from binary to decimal
         loc_bin = reconstruction[63:]
         loc = self.get_location_from_binary(loc_bin)
+
         return allocs, loc
 
     def move_locs(self, agent, prey_loc, predator_loc, speed):
+        # Initialize time metrics
         self.sampling_time = 0
         self.anneal_time = 0
         self.readout_time = 0
         self.delay_time = 0
 
+        # Get the given locations as a binary input to the network
         locs = [prey_loc, agent.loc, predator_loc]
         input_layer = []
         for i in range(len(locs)):
             bin = []
             for j in range(2):
                 if locs[i][j] >= 0:
+                    # Referenced to https://www.tutorialspoint.com/binary-list-to-integer-in-python
                     bin.append([int(b) for b in list('{0:07b}'.format(int(locs[i][j])))])
             input_layer.append(np.concatenate(np.array(bin)))
-        
         input_layer.append(np.zeros(35))
 
+        # Get the attention and movement for the input
         allocs, move_dir = self.move(np.concatenate(input_layer))
-
+        
+        # Update attention trace
         agent.attn_trace.append(allocs)
 
         # Move the agent in the given direction
@@ -284,6 +296,7 @@ class RBM:
         np.Array
             The reconstructed visible layer
         """
+        # Get the hidden layer from the input
         hidden_layer, timing = self.sampler.sample_hidden(self, visible_layer)
         if timing != -1:
             self.sampling_time += timing["qpu_sampling_time"]
@@ -291,6 +304,7 @@ class RBM:
             self.readout_time += timing["qpu_readout_time_per_sample"]
             self.delay_time += timing["qpu_delay_time_per_sample"]
 
+        # Reconstruct input from the hidden layer
         reconstruction, timing = self.sampler.sample_visible(self, hidden_layer)
         if timing != -1:
             self.sampling_time += timing["qpu_sampling_time"]
@@ -312,6 +326,7 @@ class RBM:
         List
             The list of attention allocations in the form [prey, agent, prey]
         """
+        # Referenced to https://www.tutorialspoint.com/binary-list-to-integer-in-python
         prey_binary = [int(b) for b in binary[:7]]
         prey = int("".join(str(b) for b in prey_binary), 2)
         agent_binary = [int(b) for b in binary[7:14]]
@@ -331,6 +346,7 @@ class RBM:
         List
             The location in decimals
         """
+        # Referenced to https://www.tutorialspoint.com/binary-list-to-integer-in-python
         x_binary = [int(b) for b in binary[:7]]
         x = int("".join(str(b) for b in x_binary), 2)
         y_binary = [int(b) for b in binary[7:]]
@@ -350,6 +366,7 @@ class RBM:
         float
             The error between the actual answer and the prediction
         """
+        # Mean error
         error = np.mean(np.abs(answer - prediction))
         return error
     
@@ -366,8 +383,12 @@ class RBM:
         None
         """
         error = 0
+
+        # Get the hidden layer from the input and reconstruct the input from it
         hidden, _ = self.sampler.sample_hidden(self, example)
         reconstruction, _ = self.sampler.sample_visible(self, hidden)
+
+        # Compute loss
         error = self.error(example_answer, reconstruction[42:])
         print("Error: " + str(error))
         print("Ideal allocations: " + str(self.get_allocations_from_binary(example_answer[:21])))

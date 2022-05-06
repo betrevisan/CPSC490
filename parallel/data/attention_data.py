@@ -259,5 +259,3 @@ class AttentionData:
                 best_alloc_bin.append([int(b) for b in list('{0:07b}'.format(int(best_alloc[j])))])
             answers.append(np.concatenate(np.array(best_alloc_bin)))
         return np.array(answers)
-
-    

@@ -1,3 +1,6 @@
+# Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+# and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
+
 import numpy as np
 import random
 
