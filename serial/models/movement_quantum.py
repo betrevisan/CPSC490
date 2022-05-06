@@ -51,6 +51,7 @@ class MovementModelQuantum:
         self.sampling_time = 0
         self.anneal_time = 0
         self.readout_time = 0
+        self.delay_time = 0
         self.name = name
 
     def qubo(self, dist2prey, dist2predator):
@@ -145,9 +146,11 @@ class MovementModelQuantum:
         sampling_time = sampler_output.info["timing"]["qpu_sampling_time"]
         anneal_time = sampler_output.info["timing"]["qpu_anneal_time_per_sample"]
         readout_time = sampler_output.info["timing"]["qpu_readout_time_per_sample"]
+        delay_time = sampler_output.info["timing"]["qpu_delay_time_per_sample"]
         self.sampling_time += sampling_time
         self.anneal_time += anneal_time
         self.readout_time += readout_time
+        self.delay_time += delay_time
 
         # Get the movement direction
         move_dir_idx = sampler_output.record.sample[0]

@@ -84,9 +84,11 @@ def main():
     metrics.total_sampling_time_attn = attention_model.sampling_time
     metrics.total_anneal_time_attn = attention_model.anneal_time
     metrics.total_readout_time_attn = attention_model.readout_time
+    metrics.total_delay_time_attn = attention_model.delay_time
     metrics.total_sampling_time_move = movement_model.sampling_time
     metrics.total_anneal_time_move = movement_model.anneal_time
     metrics.total_readout_time_move = movement_model.readout_time
+    metrics.total_delay_time_move = movement_model.delay_time
 
     print(metrics)
 
