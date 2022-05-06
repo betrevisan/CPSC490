@@ -55,20 +55,21 @@ class Metrics:
         display.append('General Metrics')
         display.append("\tWidth x Height:                                    " + str(self.w) + " x " + str(self.h))
         display.append("\tIterations:                                        " + str(self.iterations))
+        display.append("\tMax speed:                                         " + str(self.max_speed))
         if self.num_reads != -1:
-            display.append("\tAnnealer reads per iteration:                      " + str(self.num_reads))
+            display.append("\tAnnealer reads per iteration:                        " + str(self.num_reads))
 
         display.append('\nTime Metrics (in microseconds)')
         if self.attention_time > 0:
-            display.append("\t\tAverage Attention time:                            " + "{:.2f}".format(self.attention_time/self.iterations))
-            display.append("\t\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
+            display.append("\tAverage Attention time:                            " + "{:.2f}".format(self.attention_time/self.iterations))
+            display.append("\tAverage Movement time:                             " + "{:.2f}".format(self.movement_time/self.iterations))
         if self.total_sampling_time_attn > 0:
-            display.append("\t\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
-            display.append("\t\tAttention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
-            display.append("\t\tAttention readout time:                            " + "{:.2f}".format(self.total_readout_time_attn/self.iterations))
-            display.append("\t\tMovement sampling time:                             " + "{:.2f}".format(self.total_sampling_time_move/self.iterations))
-            display.append("\t\tMovement anneal time:                            " + "{:.2f}".format(self.total_anneal_time_move/self.iterations))
-            display.append("\t\tMovement readout time:                             " + "{:.2f}".format(self.total_readout_time_move/self.iterations))
+            display.append("\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
+            display.append("\tAttention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
+            display.append("\tAttention readout time:                            " + "{:.2f}".format(self.total_readout_time_attn/self.iterations))
+            display.append("\tMovement sampling time:                             " + "{:.2f}".format(self.total_sampling_time_move/self.iterations))
+            display.append("\tMovement anneal time:                            " + "{:.2f}".format(self.total_anneal_time_move/self.iterations))
+            display.append("\tMovement readout time:                             " + "{:.2f}".format(self.total_readout_time_move/self.iterations))
 
 
         display.append('\nAttention Allocation Metrics')

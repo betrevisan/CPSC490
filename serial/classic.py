@@ -5,6 +5,7 @@ and decide on optimal movement direction).
 """
 
 import time
+from tkinter.tix import MAX
 from models import attention_classical as attention_mod
 from models import movement_classical as movement_mod
 from characters import agent as agent_mod
@@ -66,6 +67,7 @@ def main():
     metrics.w = WIDTH
     metrics.h = HEIGHT
     metrics.iterations = ITERATIONS
+    metrics.max_speed = MAX_SPEED
 
     # Add agent to metrics
     metrics.agent_alive = agent.alive

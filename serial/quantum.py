@@ -56,6 +56,7 @@ def main():
     metrics.w = WIDTH
     metrics.h = HEIGHT
     metrics.iterations = ITERATIONS
+    metrics.max_speed = MAX_SPEED
     metrics.num_reads = NUM_READS
 
     # Add agent to metrics
