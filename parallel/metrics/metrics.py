@@ -35,9 +35,11 @@ class Metrics:
         self.train_sampling_time = 0
         self.train_anneal_time = 0
         self.train_readout_time = 0
+        self.train_delay_time = 0
         self.decision_sampling_time = 0
         self.decision_anneal_time = 0
         self.decision_readout_time = 0
+        self.decision_delay_time = 0
         self.decision_time = 0
         self.total_sampling_time_attn = 0
         self.total_anneal_time_attn = 0
@@ -87,12 +89,14 @@ class Metrics:
             display.append("\t\tTraining sampling time:                            " + "{:.2f}".format(self.train_sampling_time))
             display.append("\t\tTraining anneal time:                            " + "{:.2f}".format(self.train_anneal_time))
             display.append("\t\tTraining readout time:                            " + "{:.2f}".format(self.train_readout_time))
+            display.append("\t\tTraining delay time:                            " + "{:.2f}".format(self.train_delay_time))
         if self.decision_time > 0:
             display.append("\t\tAverage Decision time:                            " + "{:.2f}".format(self.decision_time/self.iterations))
         if self.decision_sampling_time > 0:
             display.append("\t\tDecision sampling time:                            " + "{:.2f}".format(self.decision_sampling_time))
             display.append("\t\tDecision anneal time:                            " + "{:.2f}".format(self.decision_anneal_time))
             display.append("\t\tDecision readout time:                            " + "{:.2f}".format(self.decision_readout_time))
+            display.append("\t\tDecision delay time:                            " + "{:.2f}".format(self.decision_delay_time))
 
 
         display.append('\nAttention Allocation Metrics')
