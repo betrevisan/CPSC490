@@ -68,6 +68,7 @@ class RBM:
         self.sampling_time = 0
         self.anneal_time = 0
         self.readout_time = 0
+        self.delay_time = 0
         return
 
     def train(self, train_data, epochs, learning_rate):
@@ -87,6 +88,8 @@ class RBM:
         sampling_time = 0
         anneal_time = 0
         readout_time = 0
+        delay_time = 0
+
         # Repeat for each epoch
         for epoch in range(epochs):
             datapoint_index = random.randrange(0, len(train_data))
@@ -97,18 +100,21 @@ class RBM:
                 sampling_time += timing["qpu_sampling_time"]
                 anneal_time += timing["qpu_anneal_time_per_sample"]
                 readout_time += timing["qpu_readout_time_per_sample"]
+                delay_time += timing["qpu_delay_time_per_sample"]
 
             curr_visible, timing = self.sampler.sample_visible(self, init_hidden)
             if timing != -1:
                 sampling_time += timing["qpu_sampling_time"]
                 anneal_time += timing["qpu_anneal_time_per_sample"]
                 readout_time += timing["qpu_readout_time_per_sample"]
+                delay_time += timing["qpu_delay_time_per_sample"]
 
             curr_hidden, timing = self.sampler.sample_hidden(self, curr_visible)
             if timing != -1:
                 sampling_time += timing["qpu_sampling_time"]
                 anneal_time += timing["qpu_anneal_time_per_sample"]
                 readout_time += timing["qpu_readout_time_per_sample"]
+                delay_time += timing["qpu_delay_time_per_sample"]
 
             # Update weights
             self.update_weights(init_visible, init_hidden, curr_visible, curr_hidden, learning_rate)
@@ -121,7 +127,7 @@ class RBM:
 
             error = self.error(init_visible[42:], curr_visible[42:])            
             print("epoch: " + str(epoch) + " loss: " + str(error))
-        return [sampling_time, anneal_time/(3 * epochs), readout_time/(3 * epochs)]
+        return [sampling_time, anneal_time/(3 * epochs), readout_time/(3 * epochs), delay_time/(3 * epochs)]
 
     def update_weights(self, init_visible, init_hidden, curr_visible, curr_hidden, learning_rate):
         """Update the RBM's weights given the initial visible and hidden layers, the
@@ -219,14 +225,17 @@ class RBM:
             The location the agent should move to
         """
         reconstruction = self.reconstruct(visible_layer)
+        allocs_bin = reconstruction[42:63]
+        allocs = self.get_allocations_from_binary(allocs_bin)
         loc_bin = reconstruction[63:]
         loc = self.get_location_from_binary(loc_bin)
-        return loc
+        return allocs, loc
 
     def move_locs(self, agent, prey_loc, predator_loc, speed):
         self.sampling_time = 0
         self.anneal_time = 0
         self.readout_time = 0
+        self.delay_time = 0
 
         locs = [prey_loc, agent.loc, predator_loc]
         input_layer = []
@@ -239,12 +248,14 @@ class RBM:
         
         input_layer.append(np.zeros(35))
 
-        move_dir = self.move(np.concatenate(input_layer))
+        allocs, move_dir = self.move(np.concatenate(input_layer))
+
+        agent.attn_trace.append(allocs)
 
         # Move the agent in the given direction
         agent.move(prey_loc, predator_loc, speed, move_dir)
 
-        return [self.sampling_time, self.anneal_time/2, self.readout_time/2]
+        return [self.sampling_time, self.anneal_time, self.readout_time, self.delay_time]
 
     def reconstruct(self, visible_layer):
         """Get the reconstruction of the visible layer given its initial layer.
@@ -262,12 +273,14 @@ class RBM:
             self.sampling_time += timing["qpu_sampling_time"]
             self.anneal_time += timing["qpu_anneal_time_per_sample"]
             self.readout_time += timing["qpu_readout_time_per_sample"]
+            self.delay_time += timing["qpu_delay_time_per_sample"]
 
         reconstruction, timing = self.sampler.sample_visible(self, hidden_layer)
         if timing != -1:
             self.sampling_time += timing["qpu_sampling_time"]
             self.anneal_time += timing["qpu_anneal_time_per_sample"]
             self.readout_time += timing["qpu_readout_time_per_sample"]
+            self.delay_time += timing["qpu_delay_time_per_sample"]
 
         return reconstruction
     

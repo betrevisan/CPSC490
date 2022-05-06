@@ -34,7 +34,7 @@ class Prey:
         h : int
             Height of the coordinate plane
         """
-        seed(3)
+        seed(13)
         self.loc = [randint(0, int(w/3)), randint(0, h)]
         self.alive = True
         self.loc_trace = [list(self.loc)]

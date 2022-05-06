@@ -34,7 +34,7 @@ class Predator:
         h : int
             Height of the coordinate plane
         """
-        seed(2)
+        seed(12)
         self.loc = [randint(int(2*w/3), w), randint(0, h)]
         self.feasted = False
         self.loc_trace = [list(self.loc)]

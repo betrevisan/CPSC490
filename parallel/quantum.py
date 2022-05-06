@@ -38,7 +38,7 @@ def main():
     rbm_model = rbm.RBM(rbm_sampler, visible_dim, hidden_dim)
 
     # Train the RBM for a given number of epochs with a given learning rate
-    train_sampling_time, train_anneal_time, train_readout_time = rbm_model.train(dataset.test_data_bin, EPOCHS, 0.1)
+    train_sampling_time, train_anneal_time, train_readout_time, train_delay_time = rbm_model.train(dataset.test_data_bin, EPOCHS, 0.1)
 
     # Test the RBM
     rbm_model.test(dataset.test_data_bin, dataset.test_data_bin_answers)
@@ -61,12 +61,14 @@ def main():
         predator.pursue(agent.loc, MAX_SPEED)
 
         # Moves the agent according to the boltzmann
-        decision_sampling_time, decision_anneal_time, decision_readout_time = rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
+        decision_sampling_time, decision_anneal_time, decision_readout_time, decision_delay_time = rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
 
     # Add general metrics
     metrics.w = WIDTH
     metrics.h = HEIGHT
     metrics.iterations = ITERATIONS
+    metrics.visible_dim = visible_dim
+    metrics.hidden_dim = hidden_dim
     metrics.training_size = TRAIN_SIZE
     metrics.test_size = TEST_SIZE
     metrics.max_speed = MAX_SPEED
@@ -98,9 +100,11 @@ def main():
     metrics.train_sampling_time = train_sampling_time
     metrics.train_anneal_time = train_anneal_time
     metrics.train_readout_time = train_readout_time
+    metrics.train_delay_time = train_delay_time
     metrics.decision_sampling_time = decision_sampling_time/ITERATIONS
     metrics.decision_anneal_time = decision_anneal_time/ITERATIONS
     metrics.decision_readout_time = decision_readout_time/ITERATIONS
+    metrics.decision_delay_time = decision_delay_time/ITERATIONS
 
     # Display metrics
     print(metrics)

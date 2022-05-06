@@ -24,6 +24,8 @@ class Metrics:
         self.h = 0
         self.iterations = 0
         self.max_speed = -1
+        self.visible_dim = -1
+        self.hidden_dim = -1
         self.num_reads = -1
         self.training_time = 0
         self.epochs = 0
@@ -67,6 +69,8 @@ class Metrics:
         display.append("\tWidth x Height:                                    " + str(self.w) + " x " + str(self.h))
         display.append("\tIterations:                                        " + str(self.iterations))
         display.append("\tMax speed:                                        " + str(self.max_speed))
+        display.append("\tVisible Dimensions:                                " + str(self.visible_dim))
+        display.append("\tHidden Dimensions:                                " + str(self.hidden_dim))
         if self.num_reads != -1:
             display.append("\tAnnealer reads per iteration:                      " + str(self.num_reads))
 
@@ -89,13 +93,6 @@ class Metrics:
             display.append("\t\tDecision sampling time:                            " + "{:.2f}".format(self.decision_sampling_time))
             display.append("\t\tDecision anneal time:                            " + "{:.2f}".format(self.decision_anneal_time))
             display.append("\t\tDecision readout time:                            " + "{:.2f}".format(self.decision_readout_time))
-        if self.total_sampling_time_attn > 0:
-            display.append("\t\tAttention sampling time:                            " + "{:.2f}".format(self.total_sampling_time_attn/self.iterations))
-            display.append("\t\tAttention anneal time:                             " + "{:.2f}".format(self.total_anneal_time_attn/self.iterations))
-            display.append("\t\tAttention readout time:                            " + "{:.2f}".format(self.total_readout_time_attn/self.iterations))
-            display.append("\t\tMovement sampling time:                             " + "{:.2f}".format(self.total_sampling_time_move/self.iterations))
-            display.append("\t\tMovement anneal time:                            " + "{:.2f}".format(self.total_anneal_time_move/self.iterations))
-            display.append("\t\tMovement readout time:                             " + "{:.2f}".format(self.total_readout_time_move/self.iterations))
 
 
         display.append('\nAttention Allocation Metrics')

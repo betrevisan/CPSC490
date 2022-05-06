@@ -16,7 +16,7 @@ TRAIN_SIZE = 100
 TEST_SIZE = 30
 MAX_SPEED = 5
 WIDTH = HEIGHT = 100
-EPOCHS = 20
+EPOCHS = 25
 LEARNING_RATE = 0.1
 ITERATIONS = 12 # Number of iterations in the game
 
@@ -74,6 +74,8 @@ def main():
     metrics.w = WIDTH
     metrics.h = HEIGHT
     metrics.iterations = ITERATIONS
+    metrics.visible_dim = visible_dim
+    metrics.hidden_dim = hidden_dim
     metrics.training_size = TRAIN_SIZE
     metrics.test_size = TEST_SIZE
     metrics.max_speed = MAX_SPEED
