@@ -84,7 +84,7 @@ class Agent:
         return
     
     def perceive(self, target, attention):
-        """Get the target's location given the attention level
+        """Get the target's location given the attention level.
         Parameters
         ----------
         target : Agent, Prey, or Predator
@@ -103,6 +103,7 @@ class Agent:
         if target is None or attention < 0:
             raise ValueError("invalid perceived arguments")
 
+        # Blur actual location given the allocated attention level
         blur = 100 - attention
         x = target.loc[0] + blur
         y = target.loc[1] + blur
@@ -110,7 +111,7 @@ class Agent:
 
     def move(self, agent_perceived, prey_perceived, predator_perceived,
                 prey_real, predator_real, speed, target):
-        """Move the agent using the perceived locations, speed of movement, and the target
+        """Move the agent using the perceived locations, speed of movement, and the target.
         direction.
         Parameters
         ----------
@@ -136,7 +137,6 @@ class Agent:
         ValueError
             If given arguments are invalid.
         """
-
         if agent_perceived is None or prey_perceived is None or predator_perceived is None or prey_real is None or predator_real is None or target is None:
             raise ValueError("locations must all be valid")
 
@@ -299,3 +299,4 @@ class Agent:
 
         display.append('===============================\n')
         return "\n".join(display)
+        

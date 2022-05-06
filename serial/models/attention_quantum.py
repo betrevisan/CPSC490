@@ -1,3 +1,6 @@
+# Referenced to https://github.com/dwave-examples/simple-ocean-programs for the framework
+# of this implementation
+
 import math
 from numpy import sqrt
 from dwave.system import EmbeddingComposite, DWaveSampler
@@ -32,10 +35,14 @@ class AttentionModelQuantum:
         Maximum possible distance in the coordinate plane
     num_reads : int
         Number of reads in the annealer
-    total_time : float
-        Total sampling time for this model
-    name : str, optional
-        The name of the model
+    sampling_time : float
+        Sampling time for this model
+    anneal_time : float
+        Anneal time for this model
+    readout_time : float
+        Readout time for this model
+    delay_time : float
+        Delay time for this model
     Methods
     -------
     qubo(dist)
@@ -46,7 +53,7 @@ class AttentionModelQuantum:
         Gets the attention level for the agent, the prey, and the predator.
     """
 
-    def __init__(self, w, h, num_reads, name="AttentionModel"):
+    def __init__(self, w, h, num_reads):
         """
         Parameters
         ----------
@@ -56,10 +63,7 @@ class AttentionModelQuantum:
             Height of the coordinate plane
         num_reads : int
             Number of reads in the annealer
-        name : str, optional
-            The name of the model (default is "AttentionModel")
         """
-
         self.w = w
         self.h = h
         self.max_dist = sqrt(w**2 + h**2)
@@ -68,10 +72,9 @@ class AttentionModelQuantum:
         self.anneal_time = 0
         self.readout_time = 0
         self.delay_time = 0
-        self.name = name
     
     def qubo(self, dist):
-        """Updates the QUBO given the distance to the target
+        """Updates the QUBO given the distance to the target.
         Parameters
         ----------
         dist : float
@@ -85,10 +88,10 @@ class AttentionModelQuantum:
         ValueError
             If no distance or a negative distance are passed.
         """
-        
         if dist is None or dist < 0:
             raise ValueError("dist must be a non-zero number")
 
+        # Get the distance as a ratio to the maximum distance
         d = dist/self.max_dist
 
         # Attention level dependent on cost
@@ -123,7 +126,7 @@ class AttentionModelQuantum:
         return Q_complete
     
     def alloc_attn(self, dist):
-        """Allocates attention to a character given the distance to their target
+        """Allocates attention to a character given the distance to their target.
         Parameters
         ----------
         dist : float
@@ -137,7 +140,6 @@ class AttentionModelQuantum:
         ValueError
             If no distance or a negative distance are passed.
         """
-
         if dist is None or dist < 0:
             raise ValueError("dist must be a non-zero number")
 
@@ -192,7 +194,6 @@ class AttentionModelQuantum:
         ValueError
             If characters are not passed.
         """
-
         if agent is None or prey is None or predator is None:
             raise ValueError("all character must be passed to the function")
 

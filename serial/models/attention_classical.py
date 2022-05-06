@@ -45,7 +45,6 @@ class AttentionModelClassical:
         h : int
             Height of the coordinate plane
         """
-
         self.w = w
         self.h = h
         self.max_dist = math.sqrt(w**2 + h**2)
@@ -65,19 +64,21 @@ class AttentionModelClassical:
         ValueError
             If no distance or a negative distance are passed.
         """
-
         if dist is None or dist < 0:
             raise ValueError("dist must be a non-zero number")
         
+        # Get the distance as a ratio to the maximum distance
         d = dist/self.max_dist
 
+        # Possible attention levels
         attention_levels = [25, 50, 75, 100]
 
+        # Minimum cost and selected attention level
         minimum = math.inf
-
         attention = 0
 
         # Iterate over attention levels, keeping track of the one with minimum cost
+        # The values below use the heuristics for attention allocation: cost and distance to target
         for level in attention_levels:
             cost = -(1 - level/100)
             
@@ -115,7 +116,6 @@ class AttentionModelClassical:
         ValueError
             If characters are not passed.
         """
-
         if agent is None or prey is None or predator is None:
             raise ValueError("all character must be passed to the function")
 

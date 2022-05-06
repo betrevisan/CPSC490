@@ -21,8 +21,6 @@ class Predator:
     -------
     pursue(agent_loc, speed)
         Pursues the agent given its location and a speed of movement.
-    bounce_back()
-        If the predator's location is outside the coordinate plane, bounce back into it.
     """
 
     def __init__(self, w, h):
@@ -43,7 +41,7 @@ class Predator:
         return
 
     def pursue(self, agent_loc, speed):
-        """Pursues the agent given its location and a speed of movement
+        """Pursues the agent given its location and a speed of movement.
         Parameters
         ----------
         agent_loc : [float]
@@ -58,7 +56,6 @@ class Predator:
         ValueError
             If given arguments are invalid.
         """
-
         if agent_loc is None:
             raise ValueError("agent_loc must be valid")
 

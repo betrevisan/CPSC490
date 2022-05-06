@@ -4,7 +4,6 @@ serial approach (i.e. at each time step, allocate attention, observe locations,
 and decide on optimal movement direction).
 """
 
-import time
 from models import attention_quantum as attention_mod
 from models import movement_quantum as movement_mod
 from characters import agent as agent_mod
@@ -12,8 +11,8 @@ from characters import predator as predator_mod
 from characters import prey as prey_mod
 from metrics import metrics as metrics_mod
 
-ITERATIONS = 1 # Number of iterations in the game
-NUM_READS = 5 # Number of reads in the annealer
+ITERATIONS = 10 # Number of iterations in the game
+NUM_READS = 1 # Number of reads in the annealer
 WIDTH = HEIGHT = 100
 MAX_SPEED = 5
 
@@ -34,14 +33,14 @@ def main():
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
-
+        # Allocate attention
         attn_agent, attn_prey, attn_predator = attention_model.get_attention_levels(agent,
                                                                                     prey,
                                                                                     predator)
         
-        # Prey avoids agent
+        # Prey avoids agent with full attention
         prey.avoid(agent.loc, MAX_SPEED)
-        # Predator pursues agent
+        # Predator pursues agent with full attention
         predator.pursue(agent.loc, MAX_SPEED)
 
         # Get the perceived locations
@@ -49,6 +48,7 @@ def main():
         prey_perceived = agent.perceive(prey, attn_prey)
         predator_perceived = agent.perceive(predator, attn_predator)
 
+        # Move the agent
         movement_model.move(agent, agent_perceived, prey_perceived, predator_perceived,
                             prey.loc, predator.loc, MAX_SPEED)
 
@@ -59,7 +59,7 @@ def main():
     metrics.max_speed = MAX_SPEED
     metrics.num_reads = NUM_READS
 
-    # Add agent to metrics
+    # Add agent metrics
     metrics.agent_alive = agent.alive
     metrics.agent_feasted = agent.feasted
     metrics.agent_loc_trace = agent.loc_trace
@@ -69,7 +69,7 @@ def main():
     metrics.dist_agent2prey_trace = [dist[0] for dist in agent.dist_trace]
     metrics.dist_agent2predator_trace = [dist[1] for dist in agent.dist_trace]
 
-    # Add prey to metrics
+    # Add prey metrics
     metrics.prey_alive = prey.alive
     metrics.prey_loc_trace = prey.loc_trace
 
@@ -90,6 +90,7 @@ def main():
     metrics.total_readout_time_move = movement_model.readout_time
     metrics.total_delay_time_move = movement_model.delay_time
 
+    # Display metrics
     print(metrics)
 
     return

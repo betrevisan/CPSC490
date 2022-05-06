@@ -5,7 +5,6 @@ and decide on optimal movement direction).
 """
 
 import time
-from tkinter.tix import MAX
 from models import attention_classical as attention_mod
 from models import movement_classical as movement_mod
 from characters import agent as agent_mod
@@ -34,7 +33,6 @@ def main():
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
-
         # Start the attention timer (must be adjusted from seconds to microseconds)
         attn_start_time = time.time() * 1000000
         # Allocate attention given the real locations of the characters

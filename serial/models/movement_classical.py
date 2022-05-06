@@ -44,12 +44,11 @@ class MovementModelClassical:
         h : int
             Height of the coordinate plane
         """
-
         self.w = w
         self.h = h
     
     def decide_movement(self, agent_perceived, prey_perceived, predator_perceived, speed):
-        """Decide on the direction of movement given perceived locations and movement
+        """Decide on the direction of movement given perceived locations and movement.
         Parameters
         ----------
         agent_perceived : [float]
@@ -65,15 +64,18 @@ class MovementModelClassical:
         [float]
             The target position that guides the direction of movement
         """
-
         # Let the position of the agent be the center of the circle of radius equal to max_speed
         center = agent_perceived
         radius = speed
+
+        # Possible directions
         angles = [0, 45, 90, 135, 180, 225, 270, 315]
 
+        # Best reward and selected direction
         best_reward = -math.inf
         best_loc = None
 
+        # Iterate over all possible directions keeping track of the one with the best reward
         for angle in angles:
             # Get the x and y coordinates if the agent were to move at this angle
             x = radius * np.cos(np.radians(angle)) + center[0]
@@ -128,5 +130,4 @@ class MovementModelClassical:
         agent.move(agent_perceived, prey_perceived, predator_perceived, prey_real, predator_real, speed, move_dir)
 
         return
-    
     

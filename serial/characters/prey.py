@@ -43,7 +43,7 @@ class Prey:
         return
 
     def avoid(self, agent_loc, speed):
-        """Avoids the agent given its location and a speed of movement
+        """Avoids the agent given its location and a speed of movement.
         Parameters
         ----------
         agent_loc : [float]
@@ -58,7 +58,6 @@ class Prey:
         ValueError
             If given arguments are invalid.
         """
-
         if agent_loc is None:
             raise ValueError("agent_loc must be valid")
 
@@ -97,7 +96,7 @@ class Prey:
         return
     
     def bounce_back(self):
-        """If the location is out of range, bounces it back into range
+        """If the location is out of range, bounces it back into range.
         Parameters
         ----------
         void

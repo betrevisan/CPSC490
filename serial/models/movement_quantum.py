@@ -1,3 +1,6 @@
+# Referenced to https://github.com/dwave-examples/simple-ocean-programs for the framework
+# of this implementation
+
 import math
 import numpy as np
 from dwave.system import EmbeddingComposite, DWaveSampler
@@ -16,21 +19,25 @@ class MovementModelQuantum:
         Maximum possible distance in the coordinate plane
     num_reads : int
         Number of reads in the annealer
-    total_time : floar
-        Total sampling time for this model
-    name : str, optional
-        The name of the model
+    sampling_time : float
+        Sampling time for this model
+    anneal_time : float
+        Anneal time for this model
+    readout_time : float
+        Readout time for this model
+    delay_time : float
+        Delay time for this model
     Methods
     -------
     qubo(dist2prey, dist2pred)
         Updates the QUBO formulation given distance to the prey and to the predator.
-    decide_movement(agent, agent_perceived, prey_perceived, predator_perceived, speed)
+    decide_movement(agent_perceived, prey_perceived, predator_perceived, speed)
         Decide on the direction of movement given perceived locations and movement.
     move(agent, agent_perceived, prey_perceived, predator_perceived, prey_real, predator_real, speed)
         Moves the agent into the direction decided by the quantum model.
     """
 
-    def __init__(self, w, h, num_reads, name="MovementModel"):
+    def __init__(self, w, h, num_reads):
         """
         Parameters
         ----------
@@ -40,10 +47,7 @@ class MovementModelQuantum:
             Height of the coordinate plane
         num_reads : int
             Number of reads in the annealer
-        name : str, optional
-            The name of the model (default is "MovementModel")
         """
-
         self.w = w
         self.h = h
         self.max_dist = np.sqrt(w**2 + h**2)
@@ -52,7 +56,6 @@ class MovementModelQuantum:
         self.anneal_time = 0
         self.readout_time = 0
         self.delay_time = 0
-        self.name = name
 
     def qubo(self, dist2prey, dist2predator):
         """Updates the QUBO given the distance to the target
@@ -67,7 +70,6 @@ class MovementModelQuantum:
         dict
             A dict with with the updated QUBO formulation.
         """
-
         # Build the QUBO on the prey's perceived location
         Q_prey = {}
         max_dist_prey = max(dist2prey)
@@ -93,12 +95,10 @@ class MovementModelQuantum:
 
         return Q_complete
 
-    def decide_movement(self, agent, agent_perceived, prey_perceived, predator_perceived, speed):
+    def decide_movement(self, agent_perceived, prey_perceived, predator_perceived, speed):
         """Decide on the direction of movement given perceived locations and movement
         Parameters
         ----------
-        agent : Agent
-            Agent in the predator-prey environment.
         agent_perceived : [float]
             The agent's perceived location [x, y]
         prey_perceived : [float]
@@ -115,9 +115,12 @@ class MovementModelQuantum:
         # Calculate the possible directions of movement
         center = agent_perceived
         radius = speed
+
+        # Possible directions
         angles = [0, 45, 90, 135, 180, 225, 270, 315]
         directions = []
 
+        # Iterate over all directions saving them to the directions list
         for angle in angles:
             x = radius * np.cos(np.radians(angle)) + center[0]
             y = radius * np.sin(np.radians(angle)) + center[1]
@@ -185,9 +188,10 @@ class MovementModelQuantum:
         void
         """
         # Get the point to move to
-        move_dir = self.decide_movement(agent, agent_perceived, prey_perceived, predator_perceived, speed)
+        move_dir = self.decide_movement(agent_perceived, prey_perceived, predator_perceived, speed)
 
         # Move the agent in the given direction
         agent.move(agent_perceived, prey_perceived, predator_perceived, prey_real, predator_real, speed, move_dir)
 
         return
+        
