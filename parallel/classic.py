@@ -51,13 +51,13 @@ def main():
     # Run an example
     rbm_model.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
 
+    # Initialize characters
     agent = agent_mod.Agent(WIDTH, HEIGHT)
     prey = prey_mod.Prey(WIDTH, HEIGHT)
     predator = predator_mod.Predator(WIDTH, HEIGHT)
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
-
         # Prey avoids agent
         prey.avoid(agent.loc, MAX_SPEED)
         # Predator pursues agent
@@ -107,7 +107,6 @@ def main():
     print(metrics)
 
     return
-
 
 if __name__ == "__main__":
     main()

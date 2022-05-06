@@ -38,7 +38,6 @@ def main():
     # Run an example
     rbm.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
 
-
 if __name__ == "__main__":
     main()
     

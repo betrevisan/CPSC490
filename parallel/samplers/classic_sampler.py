@@ -1,3 +1,7 @@
+# Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+# and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
+# for the framework of this implementation
+
 import numpy as np
 
 # Helper functions
@@ -51,10 +55,20 @@ class SamplerRBM:
         -------
         np.Array of size (visible_dim)
             The visible layer
+        int
+            -1 because the quantum implementation returns time information on the second 
+            return value but timining is done in a different way in the classical algorithm
+
+        Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+        and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
         """
+        # Get the weighted input given the hidden layer and the weights
         weighted_input = np.dot(hidden_input, model.weights.T)
+        # Add the biases from the visible layer to form the activation input
         activation = weighted_input + model.visible_bias
+        # Pass the activation input into the activation function to get the probability distribution
         prob_v_given_h = sigmoid(activation)
+        # Get the visible layer from the probability distribution
         visible_layer = self.layer_given_prob(prob_v_given_h)
         return visible_layer, -1
     
@@ -70,10 +84,20 @@ class SamplerRBM:
         -------
         np.Array of size (hidden_dim)
             The hidden layer
+        int
+            -1 because the quantum implementation returns time information on the second 
+            return value but timining is done in a different way in the classical algorithm
+        
+        Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+        and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
         """
+        # Get the weighted input given the visible layer and the weights
         weighted_input = np.dot(visible_input, model.weights)
+        # Add the biases from the hidden layer to form the activation input
         activation = weighted_input + model.hidden_bias
+        # Pass the activation input into the activation function to get the probability distribution
         prob_h_given_v = sigmoid(activation)
+        # Get the hidden layer from the probability distribution
         hidden_layer = self.layer_given_prob(prob_h_given_v)
         return hidden_layer, -1
     
@@ -87,5 +111,8 @@ class SamplerRBM:
         -------
         np.Array
             The layer that the probability distribution yields
+        
+        Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+        and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
         """
         return np.floor(prob + np.random.rand(prob.shape[0]))

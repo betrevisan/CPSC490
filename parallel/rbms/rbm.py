@@ -1,3 +1,6 @@
+# Referenced to https://rubikscode.net/2018/10/22/implementing-restricted-boltzmann-machine-with-python-and-tensorflow/
+# and to https://medium.com/machine-learning-researcher/boltzmann-machine-c2ce76d94da5
+
 import numpy as np
 import random
 
@@ -60,7 +63,6 @@ class RBM:
         hidden_dim : int
             Number of nodes in the hidden dimension of the RBM
         """
-
         self.sampler = sampler
         self.weights = np.random.randn(visible_dim, hidden_dim)
         self.visible_bias = np.random.randn(visible_dim)
@@ -85,6 +87,7 @@ class RBM:
         -------
         None
         """
+        # Initialize sampling metrics
         sampling_time = 0
         anneal_time = 0
         readout_time = 0
@@ -92,8 +95,10 @@ class RBM:
 
         # Repeat for each epoch
         for epoch in range(epochs):
+            # Get a random datapoint
             datapoint_index = random.randrange(0, len(train_data))
             
+            # Use the datapoint as the visible layer and get the hidden layer from it
             init_visible = train_data[datapoint_index]
             init_hidden, timing = self.sampler.sample_hidden(self, init_visible)
             if timing != -1:
@@ -102,6 +107,7 @@ class RBM:
                 readout_time += timing["qpu_readout_time_per_sample"]
                 delay_time += timing["qpu_delay_time_per_sample"]
 
+            # Get the reconstruction from the hidden layer
             curr_visible, timing = self.sampler.sample_visible(self, init_hidden)
             if timing != -1:
                 sampling_time += timing["qpu_sampling_time"]
@@ -109,6 +115,7 @@ class RBM:
                 readout_time += timing["qpu_readout_time_per_sample"]
                 delay_time += timing["qpu_delay_time_per_sample"]
 
+            # Get the new hidden layer from the reconstruction
             curr_hidden, timing = self.sampler.sample_hidden(self, curr_visible)
             if timing != -1:
                 sampling_time += timing["qpu_sampling_time"]
@@ -125,6 +132,7 @@ class RBM:
             # Update hidden bias
             self.update_hidden_bias(init_hidden, curr_hidden, learning_rate)
 
+            # Compute loss and display it
             error = self.error(init_visible[42:], curr_visible[42:])            
             print("epoch: " + str(epoch) + " loss: " + str(error))
         return [sampling_time, anneal_time/(3 * epochs), readout_time/(3 * epochs), delay_time/(3 * epochs)]
@@ -148,8 +156,10 @@ class RBM:
         -------
         None
         """
+        # Compute positive and negative gradients
         positive_gradient = np.outer(init_visible, init_hidden)
         negative_gradient = np.outer(curr_visible, curr_hidden)
+        # Increment weights accordingly
         self.weights += learning_rate * (positive_gradient - negative_gradient)
         return
     
@@ -168,6 +178,7 @@ class RBM:
         -------
         None
         """
+        # Increment the visible biases accordingly
         self.visible_bias += learning_rate * (init_visible - curr_visible)
         return
 
@@ -186,6 +197,7 @@ class RBM:
         -------
         None
         """
+        # Increment the hidden bias accordingly
         self.hidden_bias += learning_rate * (init_hidden - curr_hidden)
         return
     
@@ -204,10 +216,14 @@ class RBM:
         # Testing the RBM Model
         error = 0
         for i in range(len(test_data)):
+            # Use the testing datapoint as the visible layer
             visible = test_data[i]
             visible_answer = test_answers[i]
+            # Get the hidden layer from the input and reconstruct the input from it
             hidden, _ = self.sampler.sample_hidden(self, visible)
             visible, _ = self.sampler.sample_visible(self, hidden)
+
+            # Compute the loss given the ideal answer and the model's
             error += self.error(visible_answer, visible[42:])
         print("test loss: " + str(error/len(test_data)))
         return

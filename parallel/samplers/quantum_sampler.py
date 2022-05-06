@@ -1,3 +1,6 @@
+# Referenced to https://github.com/mareksubocz/QRBM for the framework
+# of this implementation
+
 import numpy as np
 from pyqubo import Binary
 from dwave.system.composites import EmbeddingComposite
@@ -11,7 +14,6 @@ class SamplerQRBM:
     Attributes
     ----------
     None
-
     Methods
     -------
     sample_visible(model, hidden_input)
@@ -36,7 +38,12 @@ class SamplerQRBM:
         -------
         np.Array of size (visible_dim)
             The visible layer
+        Timing
+            Timing information about the quantum sample
+
+        Referenced to https://github.com/mareksubocz/QRBM
         """
+        # Declare hamiltonian
         hamiltonian = 0
         hamiltonian_vars = []
         
@@ -64,9 +71,9 @@ class SamplerQRBM:
         # Initialize quantum sampler
         quantum_sampler = EmbeddingComposite(DWaveSampler())
         
-        # CONFIRM CHAIN STRENGTH
-        # CONFIRM NUM_READS
         # Sample BQM
+        # For now, number of reads in the annealer is always 1 and the chain strength
+        # is always 2
         sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
         timing = sampler_output.info["timing"]
         sampler_output = sampler_output.first.sample
@@ -85,7 +92,12 @@ class SamplerQRBM:
         -------
         np.Array of size (hidden_dim)
             The hidden layer
+        Timing
+            Timing information about the quantum sample
+
+        Referenced to https://github.com/mareksubocz/QRBM
         """
+        # Declare hamiltonian
         hamiltonian = 0
         hamiltonian_vars = []
         
@@ -113,9 +125,9 @@ class SamplerQRBM:
         # Initialize quantum sampler
         quantum_sampler = EmbeddingComposite(DWaveSampler())
         
-        # CONFIRM CHAIN STRENGTH
-        # CONFIRM NUM_READS
         # Sample BQM
+        # For now, number of reads in the annealer is always 1 and the chain strength
+        # is always 2
         sampler_output = quantum_sampler.sample(bqm, num_reads=1, chain_strength=2)
         timing = sampler_output.info["timing"]
         sampler_output = sampler_output.first.sample
@@ -132,6 +144,8 @@ class SamplerQRBM:
         -------
         np.Array
             The layer that the output from the quantum sampler yields
+
+        Referenced to https://github.com/mareksubocz/QRBM
         """
         # Output as list
         sampler_output_list = [(k, v) for k, v in sampler_output.items()]

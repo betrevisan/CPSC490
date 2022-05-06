@@ -46,15 +46,16 @@ def main():
     # Run an example
     rbm_model.run_example(dataset.test_data_bin[0], dataset.test_data_bin_answers[0])
 
+    # Initialize characters
     agent = agent_mod.Agent(WIDTH, HEIGHT)
     prey = prey_mod.Prey(WIDTH, HEIGHT)
     predator = predator_mod.Predator(WIDTH, HEIGHT)
 
-    decision_sampling_time = decision_anneal_time = decision_readout_time = 0
+    # Initialize time metrics
+    decision_sampling_time = decision_anneal_time = decision_readout_time, decision_delay_time = 0
 
     # Run model for n iterations
     for _ in range(ITERATIONS):
-
         # Prey avoids agent
         prey.avoid(agent.loc, MAX_SPEED)
         # Predator pursues agent
@@ -113,3 +114,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
