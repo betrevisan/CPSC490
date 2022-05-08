@@ -62,7 +62,7 @@ def main():
         predator.pursue(agent.loc, MAX_SPEED)
 
         # Moves the agent according to the boltzmann
-        decision_sampling_time, decision_anneal_time, decision_readout_time, decision_delay_time = rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
+        decision_sampling_time, decision_anneal_time, decision_readout_time = decision_delay_time = rbm_model.move_locs(agent, prey.loc, predator.loc, MAX_SPEED)
 
     # Add general metrics
     metrics.w = WIDTH
