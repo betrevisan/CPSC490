@@ -129,6 +129,8 @@ class Agent:
         ------
         ValueError
             If given arguments are invalid.
+        Referenced to https://math.stackexchange.com/questions/3932112/move-a-point-along-a-vector-by-a-given-distance
+        for the movement.
         """
         if prey_real is None or predator_real is None or target is None:
             raise ValueError("locations must all be valid")

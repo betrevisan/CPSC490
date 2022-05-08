@@ -55,6 +55,8 @@ class Predator:
         ------
         ValueError
             If given arguments are invalid.
+        Referenced to https://math.stackexchange.com/questions/3932112/move-a-point-along-a-vector-by-a-given-distance
+        for the movement
         """
         if agent_loc is None:
             raise ValueError("agent_loc must be valid")
