@@ -239,7 +239,7 @@ class Data:
         perceived_locs = locs
 
         for i in range(3):
-            blur = 0.5 * (100 - attentions[i])
+            blur = 0.1 * (100 - attentions[i])
             perceived_locs[i][0] = locs[i][0] + blur
             perceived_locs[i][1] = locs[i][1] + blur
 
