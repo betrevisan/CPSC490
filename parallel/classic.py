@@ -12,8 +12,8 @@ from characters import predator as predator_mod
 from characters import prey as prey_mod
 from metrics import metrics as metrics_mod
 
-TRAIN_SIZE = 100
-TEST_SIZE = 30
+TRAIN_SIZE = 1000
+TEST_SIZE = 100
 MAX_SPEED = 5
 WIDTH = HEIGHT = 100
 EPOCHS = 25
@@ -59,9 +59,9 @@ def main():
     # Run model for n iterations
     for _ in range(ITERATIONS):
         # Prey avoids agent
-        prey.avoid(agent.loc, MAX_SPEED)
+        prey.avoid(agent.loc, MAX_SPEED-3)
         # Predator pursues agent
-        predator.pursue(agent.loc, MAX_SPEED)
+        predator.pursue(agent.loc, MAX_SPEED-3)
 
         # Start the movement timer
         decision_start_time = time.time() * 1000000

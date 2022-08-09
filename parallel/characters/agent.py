@@ -104,7 +104,7 @@ class Agent:
             raise ValueError("invalid perceived arguments")
 
         # Blur actual location given the allocated attention level
-        blur = 100 - attention
+        blur = (100 - attention)/10
         x = target.loc[0] + blur
         y = target.loc[1] + blur
         return [x, y]
